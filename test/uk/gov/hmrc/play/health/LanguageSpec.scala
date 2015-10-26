@@ -28,22 +28,43 @@ import play.api.test.Helpers._
 
 class LanguageSpec extends WordSpec with ShouldMatchers with PlayRunners with ScalaFutures with DefaultAwaitTimeout with IntegrationPatience {
 
+  val routerKey   = "application.router" 
+  val routerValue = "language.Routes"
+  val routerConfig = Map(routerKey -> routerValue)
+
+  val fallbackKey   = "language.fallbackUrl"
+  val fallbackValue = "www.gov.uk"
+  val fallbackConfig = Map(fallbackKey -> fallbackValue)
+
   trait Resource {
     this: WithServer =>
-    def resource(path: String) = WS.url(s"http://localhost:$port" + path).get().futureValue
+          def resource(path: String) = WS.url(s"http://localhost:$port" + path).get().futureValue
   }
 
-  val testConfig = Map("application.router" -> "language.Routes")
-
   abstract class ServerWithConfig(conf: Map[String, String] = Map.empty) extends
-    WithServer(FakeApplication(additionalConfiguration = testConfig ++ conf)) with Resource
+    WithServer(FakeApplication(additionalConfiguration = routerConfig ++ conf)) with Resource
+
+
+  "ServerWithConfig" should { 
+
+    import play.api.Play.current
+
+    "return language routes configuration when created" in new ServerWithConfig() { 
+        current.configuration.getString(routerKey).get should be (routerValue)
+    } 
+
+    "return fallback URL when additional configuration is set" in new ServerWithConfig(fallbackConfig) { 
+        current.configuration.getString(fallbackKey).get should be (fallbackValue)
+    } 
+  }
+
 
   "The switch to English endpoint" should {
 
     val englishRequest = FakeRequest("GET", "/switch-to-english")
 
     "respond with a redirect status code when accessed with a valid referer header" in new ServerWithConfig() {
-      val request = englishRequest.withHeaders(REFERER -> "www.gov.uk")
+      val request = englishRequest.withHeaders(REFERER -> fallbackValue)
       val Some(result) = route(request)
       status(result) should be (SEE_OTHER)
     }
@@ -54,9 +75,19 @@ class LanguageSpec extends WordSpec with ShouldMatchers with PlayRunners with Sc
     }
 
     "set the redirect location to the correct referer value when set" in new ServerWithConfig() {
-      val request = englishRequest.withHeaders(REFERER -> "www.gov.uk")
+      val request = englishRequest.withHeaders(REFERER -> fallbackValue)
       val Some(result) = route(request)
-      redirectLocation(result) should be (Some("www.gov.uk"))
+      redirectLocation(result) should be (Some(fallbackValue))
+    }
+
+    "set the redirect location to the default referer value when not set" in new ServerWithConfig() {
+      val Some(result) = route(englishRequest)
+      redirectLocation(result) should be (Some("/"))
+    }
+
+    "set the redirect location to the value set in application config when no referer is found" in new ServerWithConfig(fallbackConfig) {
+      val Some(result) = route(englishRequest)
+      redirectLocation(result) should be (Some(fallbackValue))
     }
 
     "should set the English language in a local cookie" in new ServerWithConfig() {
@@ -74,7 +105,7 @@ class LanguageSpec extends WordSpec with ShouldMatchers with PlayRunners with Sc
     val welshRequest = FakeRequest("GET", "/switch-to-welsh")
 
     "respond with a redirect status code when accessed with a valid referer header" in new ServerWithConfig() {
-      val request = welshRequest.withHeaders(REFERER -> "www.gov.uk")
+      val request = welshRequest.withHeaders(REFERER -> fallbackValue)
       val Some(result) = route(request)
       status(result) should be (SEE_OTHER)
     }
@@ -85,9 +116,19 @@ class LanguageSpec extends WordSpec with ShouldMatchers with PlayRunners with Sc
     }
 
     "set the redirect location to the correct referer value when set" in new ServerWithConfig() {
-      val request = welshRequest.withHeaders(REFERER -> "www.gov.uk")
+      val request = welshRequest.withHeaders(REFERER -> fallbackValue)
       val Some(result) = route(request)
-      redirectLocation(result) should be (Some("www.gov.uk"))
+      redirectLocation(result) should be (Some(fallbackValue))
+    }
+
+    "set the redirect location to the default referer value when not set" in new ServerWithConfig() {
+      val Some(result) = route(welshRequest)
+      redirectLocation(result) should be (Some("/"))
+    }
+
+    "set the redirect location to the value set in application config when no referer is found" in new ServerWithConfig(fallbackConfig) {
+      val Some(result) = route(welshRequest)
+      redirectLocation(result) should be (Some(fallbackValue))
     }
 
     "should set the Welsh language in a local cookie" in new ServerWithConfig() {
