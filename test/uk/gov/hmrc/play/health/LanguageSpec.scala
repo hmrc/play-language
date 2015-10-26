@@ -98,6 +98,19 @@ class LanguageSpec extends WordSpec with ShouldMatchers with PlayRunners with Sc
       }
     }
 
+    "switch back to English after being switched to Welsh"  in new ServerWithConfig() {
+      val Some(result) = route(FakeRequest("GET", "/switch-to-welsh"))
+      cookies(result).get("PLAY_LANG") match {
+        case Some(c: Cookie) => c.value should be ("cy")
+        case _ => fail("PLAY_LANG cookie was not found.")
+      }
+      val Some(enResult) = route(englishRequest)
+      cookies(enResult).get("PLAY_LANG") match {
+        case Some(c: Cookie) => c.value should be ("en")
+        case _ => fail("PLAY_LANG cookie was not found.")
+      }      
+    }
+
   }
 
   "The switch to Welsh endpoint" should {
@@ -137,6 +150,19 @@ class LanguageSpec extends WordSpec with ShouldMatchers with PlayRunners with Sc
         case Some(c: Cookie) => c.value should be ("cy")
         case _ => fail("PLAY_LANG cookie was not found.")
       }
+    }
+
+    "switch back to Welsh after being switched to English"  in new ServerWithConfig() {
+      val Some(result) = route(FakeRequest("GET", "/switch-to-english"))
+      cookies(result).get("PLAY_LANG") match {
+        case Some(c: Cookie) => c.value should be ("en")
+        case _ => fail("PLAY_LANG cookie was not found.")
+      }
+      val Some(cyResult) = route(welshRequest)
+      cookies(cyResult).get("PLAY_LANG") match {
+        case Some(c: Cookie) => c.value should be ("cy")
+        case _ => fail("PLAY_LANG cookie was not found.")
+      }      
     }
 
   }
