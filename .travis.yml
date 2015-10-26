@@ -1,4 +1,3 @@
-
 sudo: false
 language: scala
 scala:
@@ -8,4 +7,3 @@ jdk:
 cache:
   directories:
     - '$HOME/.ivy2/cache'
-    
