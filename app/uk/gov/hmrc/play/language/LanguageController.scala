@@ -16,33 +16,26 @@
 
 package uk.gov.hmrc.play.language
 
-import play.api.Logger
 import play.api.i18n.Lang
-import play.api.mvc.{Controller, Call, Action}
+import play.api.mvc.{Action, Call, Controller}
+import play.api.Play.current
 
 trait LanguageController extends Controller {
-
-  import play.api.Play.current
 
   val English = Lang("en")
   val Welsh = Lang("cy")
 
-  private def fallbackURL = current.configuration.getString("language.fallbackUrl").getOrElse("/")
-
   def switchToEnglish = switchToLang(English)
   def switchToWelsh = switchToLang(Welsh)
 
-  private def switchToLang(lang: Lang) = Action { implicit request =>
+  private def fallbackURL = current.configuration.getString("language.fallbackUrl").getOrElse("/")
 
+  private def switchToLang(lang: Lang) = Action { implicit request =>
     request.headers.get(REFERER) match {
       case Some(referrer) => Redirect(referrer).withLang(lang)
-      case None => {
-        Logger.warn("Referer was not set, sending to fallback.")
-        Redirect(Call("GET", fallbackURL)).withLang(lang)
-      }
+      case None => Redirect(Call("GET", fallbackURL)).withLang(lang)
     }
   }
-
 }
 
 object LanguageController extends LanguageController
