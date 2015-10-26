@@ -27,7 +27,7 @@ trait LanguageController extends Controller {
   val English = Lang("en")
   val Welsh = Lang("cy")
 
-  def fallbackRedirect: Call = Call("GET", "/")
+  private val fallbackURL = current.configuration.getString("language.fallbackUrl").getOrElse("/")
 
   def switchToEnglish = switchToLang(English)
   def switchToWelsh = switchToLang(Welsh)
@@ -37,7 +37,7 @@ trait LanguageController extends Controller {
       case Some(referrer) => Redirect(referrer).withLang(lang)
       case None => {
         Logger.warn("Unable to get the referrer, so sending them to the start.")
-        Redirect(fallbackRedirect).withLang(lang)
+        Redirect(Call("GET", fallbackURL)).withLang(lang)
       }
     }
   }
