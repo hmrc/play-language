@@ -39,32 +39,32 @@ class LanguageSpec extends WordSpec with ShouldMatchers with PlayRunners with Sc
     WithServer(FakeApplication(additionalConfiguration = testConfig ++ conf)) with Resource
 
   "The switch to English endpoint" should {
-    "respond with a redirect status code when accessed with a valid referer header" in running(FakeApplication()) {
+    "respond with a redirect status code when accessed with a valid referer header" in new ServerWithConfig() {
       val request = FakeRequest("GET", "/switch-to-english").withHeaders(REFERER -> "www.gov.uk")
       val Some(result) = route(request)
-      status(result) should be (TEMPORARY_REDIRECT)
+      status(result) should be (SEE_OTHER)
     }
 
-    "respond with a redirect status code when accessed with no referer header" in running(FakeApplication()) {
+    "respond with a redirect status code when accessed with no referer header" in new ServerWithConfig(){
       val request = FakeRequest("GET", "/switch-to-english")
       val Some(result) = route(request)
-      status(result) should be (TEMPORARY_REDIRECT)
+      status(result) should be (SEE_OTHER)
     }
 
   }
 
   "The switch to Welsh endpoint" should {
 
-    "respond with a redirect status code when accessed with a valid referer header" in running(FakeApplication()) {
+    "respond with a redirect status code when accessed with a valid referer header" in new ServerWithConfig() {
       val request = FakeRequest("GET", "/switch-to-welsh").withHeaders(REFERER -> "www.gov.uk")
       val Some(result) = route(request)
-      status(result) should be (TEMPORARY_REDIRECT)
+      status(result) should be (SEE_OTHER)
     }
 
-    "respond with a redirect status code when accessed with no referer header" in running(FakeApplication()) {
+    "respond with a redirect status code when accessed with no referer header" in new ServerWithConfig() {
       val request = FakeRequest("GET", "/switch-to-welsh")
       val Some(result) = route(request)
-      status(result) should be (TEMPORARY_REDIRECT)
+      status(result) should be (SEE_OTHER)
     }
 
   }
