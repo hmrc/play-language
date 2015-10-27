@@ -37,6 +37,7 @@ object HmrcBuild extends Build {
         Compile.playFramework,
         Compile.playWS,
         Compile.frontendBootstrap,
+        Compile.urlBuilder,
         Test.playTest,
         Test.scalaTest,
         Test.pegdown
@@ -53,10 +54,12 @@ private object AppDependencies {
   object Compile {
 
     private val frontendBootstrapVersion = "1.1.0"
+    private val urlBuilderVersion        = "1.0.0"
 
     val playFramework     = "com.typesafe.play" %% "play" % PlayVersion.current % "provided"
     val playWS            = PlayImport.ws % "provided"
     val frontendBootstrap = "uk.gov.hmrc" %% "frontend-bootstrap" % frontendBootstrapVersion
+    val urlBuilder        = "uk.gov.hmrc" %% "url-builder"        % urlBuilderVersion
 
   }
 

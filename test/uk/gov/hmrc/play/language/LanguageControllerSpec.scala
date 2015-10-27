@@ -24,7 +24,7 @@ import play.api.test._
 import play.api.test.Helpers._
 
 
-class LanguageSpec extends WordSpec with ShouldMatchers with PlayRunners with ScalaFutures with DefaultAwaitTimeout with IntegrationPatience {
+class LanguageControllerSpec extends WordSpec with ShouldMatchers with PlayRunners with ScalaFutures with DefaultAwaitTimeout with IntegrationPatience {
 
   val routerKey       = "application.router"
   val routerValue     = "language.Routes"

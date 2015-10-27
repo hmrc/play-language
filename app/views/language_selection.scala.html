@@ -1,0 +1,20 @@
+@()(implicit lang: Lang)
+
+@import play.api.i18n.Messages
+@import uk.gov.hmrc.urls.Link
+@import uk.gov.hmrc.play.language.routes
+
+@if(lang.code == "cy") {
+    <p class="float--right">
+        @Link.toInternalPage(id = Some("english-switch"),
+                            url = s"${routes.LanguageController.switchToEnglish}",
+                          value = Some(s"${Messages("language.switch.english")}")).toHtml
+        | @Messages("language.switch.welsh")
+    </p>
+} else {
+    <p class="float--right">@Messages("language.switch.english") |
+        @Link.toInternalPage(id = Some("welsh-switch"),
+                            url = s"${routes.LanguageController.switchToWelsh}",
+                          value = Some(Messages("language.switch.welsh"))).toHtml
+    </p>
+}
