@@ -1,4 +1,4 @@
-@()(implicit lang: Lang)
+@(customClass: Option[String])(implicit lang: Lang)
 
 @import play.api.i18n.Messages
 @import uk.gov.hmrc.urls.Link
@@ -6,14 +6,14 @@
 @import uk.gov.hmrc.play.language.LanguageUtils.WelshLangCode
 
 @if(lang.code == WelshLangCode) {
-    <p class="float--right">
+    <p class="@if(customClass.isDefined) {@customClass.get}">
         @Link.toInternalPage(id = Some("english-switch"),
                             url = s"${routes.LanguageController.switchToEnglish}",
                           value = Some(s"${Messages("language.switch.english")}")).toHtml
         | @Messages("language.switch.welsh")
     </p>
 } else {
-    <p class="float--right">@Messages("language.switch.english") |
+    <p class="@if(customClass.isDefined) {@customClass.get}">@Messages("language.switch.english") |
         @Link.toInternalPage(id = Some("welsh-switch"),
                             url = s"${routes.LanguageController.switchToWelsh}",
                           value = Some(Messages("language.switch.welsh"))).toHtml

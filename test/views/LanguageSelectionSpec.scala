@@ -27,29 +27,35 @@ class LanguageSelectionSpec extends WordSpec with ShouldMatchers {
   "Language selection template view" should {
 
     "give a link to switch to Welsh when current language is English" in {
-      val html = views.html.language_selection.render(English)
+      val html = views.html.language_selection.render(None, English)
       contentType(html) should be ("text/html")
       contentAsString(html) should include (Messages("id=\"welsh-switch\""))
       contentAsString(html) should include ("/switch-to-welsh")
     }
 
     "show correct current language message when current language is English" in running(new FakeApplication) {
-      val html = views.html.language_selection.render(English)
+      val html = views.html.language_selection.render(None, English)
       contentType(html) should be ("text/html")
       contentAsString(html) should include (Messages("language.switch.english") + " |")
     }
 
     "give a link to switch to English when current language is Welsh" in {
-      val html = views.html.language_selection.render(Welsh)
+      val html = views.html.language_selection.render(None, Welsh)
       contentType(html) should be ("text/html")
       contentAsString(html) should include (Messages("id=\"english-switch\""))
       contentAsString(html) should include ("/switch-to-english")
     }
 
     "show correct current language message when current language is Welsh" in running(new FakeApplication) {
-      val html = views.html.language_selection.render(Welsh)
+      val html = views.html.language_selection.render(None, Welsh)
       contentType(html) should be ("text/html")
       contentAsString(html) should include ("| " + Messages("language.switch.welsh"))
+    }
+
+    "show a custom class if it is set" in running(new FakeApplication) {
+      val html = views.html.language_selection.render(Some("float--right"), Welsh)
+      contentType(html) should be ("text/html")
+      contentAsString(html) should include ("class=\"float--right\"")
     }
 
   }
