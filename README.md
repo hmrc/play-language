@@ -4,7 +4,6 @@
 
 [![Build Status](https://travis-ci.org/hmrc/play-language.svg)](https://travis-ci.org/hmrc/play-language-support) [ ![Download](https://api.bintray.com/packages/hmrc/releases/play-language-support/images/download.svg) ](https://bintray.com/hmrc/releases/play-language/_latestVersion)
 
-
 Plugin to provide common language support and switching functionality for Play +2.2.3 projects.
 
 ##Endpoints
@@ -21,7 +20,7 @@ This adds two endpoints:
 Add the jar to the projects dependencies:
 
 ```
-    "uk.gov.hmrc" %% "play-language-support" % "[INSERT VERSION]"
+    "uk.gov.hmrc" %% "play-language" % "[INSERT VERSION]"
 ```
 
 Add plugin to play.plugins:
@@ -38,7 +37,13 @@ Additionally, add the following to the routes file:
 
 ## Configuration
 
-The plugin expects to find the apps name in the `application.conf` under the key `appName`.
+The plugin expects to find the fallback URL in an `application.conf` under the key `language.fallbackUrl`. This is the URL that the plugin will redirect the user to if no referer value is found in the header, which shouldn't happen in a normal user journey.
+
+```
+    language {
+    	fallbackUrl = "https://localhost:$port/some-service-url/"
+    }
+```
 
 ## License ##
  
