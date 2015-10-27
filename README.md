@@ -29,10 +29,16 @@ Add plugin to play.plugins:
     {priority}:uk.gov.hmrc.play.language.LanguagePlugin
 ```
 
-Additionally, add the following to the routes file:
+Add the following to the routes file:
 
 ```
     ->     /                                    language.Routes
+```
+
+Additionally, add the following to the application conf file:
+
+```
+    application.langs="en,cy"
 ```
 
 ## Configuration

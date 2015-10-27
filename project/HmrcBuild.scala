@@ -38,8 +38,10 @@ object HmrcBuild extends Build {
         Compile.playWS,
         Compile.frontendBootstrap,
         Compile.urlBuilder,
+        Compile.ibm4j,
         Test.playTest,
         Test.scalaTest,
+        Test.scalaTestPlus,
         Test.pegdown
       )
     )
@@ -55,23 +57,26 @@ private object AppDependencies {
 
     private val frontendBootstrapVersion = "1.1.0"
     private val urlBuilderVersion        = "1.0.0"
+    private val ibm4jVersion             = "54.1.1"
 
     val playFramework     = "com.typesafe.play" %% "play" % PlayVersion.current % "provided"
     val playWS            = PlayImport.ws % "provided"
     val frontendBootstrap = "uk.gov.hmrc" %% "frontend-bootstrap" % frontendBootstrapVersion
     val urlBuilder        = "uk.gov.hmrc" %% "url-builder"        % urlBuilderVersion
+    val ibm4j             = "com.ibm.icu" % "icu4j"               % ibm4jVersion
 
   }
 
   sealed abstract class Test(scope: String) {
 
-    private val scalaTestVersion  = "2.2.4"
-    private val pegdownVersion    = "1.4.2"
+    private val scalaTestVersion     = "2.2.4"
+    private val scalaTestPlusVersion = "1.1.0"
+    private val pegdownVersion       = "1.4.2"
 
-    val playTest  = "com.typesafe.play" %% "play-test"   % PlayVersion.current % scope
-    val scalaTest = "org.scalatest"     %% "scalatest"   % scalaTestVersion    % scope
-    val pegdown   = "org.pegdown"       %  "pegdown"     % pegdownVersion      % scope
-
+    val playTest      = "com.typesafe.play" %% "play-test"   % PlayVersion.current  % scope
+    val scalaTest     = "org.scalatest"     %% "scalatest"   % scalaTestVersion     % scope
+    val scalaTestPlus = "org.scalatestplus" %  "play_2.11"   % scalaTestPlusVersion % scope
+    val pegdown       = "org.pegdown"       %  "pegdown"     % pegdownVersion       % scope
   }
 
   object Test extends Test("test")

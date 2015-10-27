@@ -20,7 +20,7 @@ import org.scalatest._
 import play.api.i18n.Messages
 import play.api.test.FakeApplication
 import play.api.test.Helpers._
-import uk.gov.hmrc.play.language.LanguageController._
+import uk.gov.hmrc.play.language.LanguageUtils.{English, Welsh}
 
 class LanguageSelectionSpec extends WordSpec with ShouldMatchers {
 

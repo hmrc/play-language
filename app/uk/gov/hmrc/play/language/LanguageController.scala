@@ -19,11 +19,9 @@ package uk.gov.hmrc.play.language
 import play.api.i18n.Lang
 import play.api.mvc.{Action, Call, Controller}
 import play.api.Play.current
+import LanguageUtils.{English, Welsh}
 
 trait LanguageController extends Controller {
-
-  val English = Lang("en")
-  val Welsh = Lang("cy")
 
   def switchToEnglish = switchToLang(English)
   def switchToWelsh = switchToLang(Welsh)
