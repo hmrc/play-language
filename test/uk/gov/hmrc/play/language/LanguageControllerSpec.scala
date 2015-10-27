@@ -18,6 +18,7 @@ package uk.gov.hmrc.play.language
 
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.{WordSpec, ShouldMatchers}
+import play.api.Play
 import play.api.libs.ws.WS
 import play.api.mvc.Cookie
 import play.api.test._
@@ -96,7 +97,7 @@ class LanguageControllerSpec extends WordSpec with ShouldMatchers with PlayRunne
     "should set the English language in a local cookie." in
       new ServerWithConfig() {
         val Some(result) = route(englishRequest)
-        cookies(result).get("PLAY_LANG") match {
+        cookies(result).get(Play.langCookieName) match {
           case Some(c: Cookie) => c.value should be (EnglishLangCode)
           case _ => fail("PLAY_LANG cookie was not found.")
         }
@@ -105,12 +106,12 @@ class LanguageControllerSpec extends WordSpec with ShouldMatchers with PlayRunne
     "switch back to English after being switched to Welsh." in
       new ServerWithConfig() {
         val Some(result) = route(FakeRequest("GET", "/switch-to-welsh"))
-        cookies(result).get("PLAY_LANG") match {
+        cookies(result).get(Play.langCookieName) match {
           case Some(c: Cookie) => c.value should be (WelshLangCode)
           case _ => fail("PLAY_LANG cookie was not found.")
         }
         val Some(enResult) = route(englishRequest)
-        cookies(enResult).get("PLAY_LANG") match {
+        cookies(enResult).get(Play.langCookieName) match {
           case Some(c: Cookie) => c.value should be (EnglishLangCode)
           case _ => fail("PLAY_LANG cookie was not found.")
         }
@@ -157,7 +158,7 @@ class LanguageControllerSpec extends WordSpec with ShouldMatchers with PlayRunne
     "should set the Welsh language in a local cookie." in
       new ServerWithConfig() {
         val Some(result) = route(welshRequest)
-        cookies(result).get("PLAY_LANG") match {
+        cookies(result).get(Play.langCookieName) match {
           case Some(c: Cookie) => c.value should be (WelshLangCode)
           case _ => fail("PLAY_LANG cookie was not found.")
         }
@@ -166,12 +167,12 @@ class LanguageControllerSpec extends WordSpec with ShouldMatchers with PlayRunne
     "switch back to Welsh after being switched to English."  in
       new ServerWithConfig() {
         val Some(result) = route(FakeRequest("GET", "/switch-to-english"))
-        cookies(result).get("PLAY_LANG") match {
+        cookies(result).get(Play.langCookieName) match {
           case Some(c: Cookie) => c.value should be (EnglishLangCode)
           case _ => fail("PLAY_LANG cookie was not found.")
         }
         val Some(cyResult) = route(welshRequest)
-        cookies(cyResult).get("PLAY_LANG") match {
+        cookies(cyResult).get(Play.langCookieName) match {
           case Some(c: Cookie) => c.value should be (WelshLangCode)
           case _ => fail("PLAY_LANG cookie was not found.")
         }

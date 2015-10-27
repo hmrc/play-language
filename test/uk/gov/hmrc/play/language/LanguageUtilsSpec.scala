@@ -60,6 +60,11 @@ class LanguageUtilsSpec extends FlatSpec with Matchers with OneAppPerSuite {
     formatEasyReadingTimestamp(None, "some_default") shouldBe "some_default"
   }
 
+  "Method formatDateRange" should "return correctly formatted date and time range in both English and Welsh" in {
+    formatDateRange(date, date)(English) shouldBe "25 January 2015 to 25 January 2015"
+    formatDateRange(date, date)(Welsh) shouldBe "25 Ionawr 2015 i 25 Ionawr 2015"
+  }
+
   "Method formatDays" should "return correct singular/plural for day/days in both English and Welsh" in {
     formatDays(1)(English) shouldBe "1 day"
     formatDays(5)(English) shouldBe "5 days"

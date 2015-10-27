@@ -31,6 +31,9 @@ object LanguageUtils {
   val WelshLangCode = "cy-GB"
   val EnglishLangCode = "en-GB"
 
+  val SwitchIndicatorKey = "switching-language"
+  val FlashWithSwitchIndicator = Flash(Map(SwitchIndicatorKey -> "true"))
+
   def getCurrentLang(implicit request: RequestHeader): Lang = {
     Play.maybeApplication.map { implicit app =>
       val maybeLangFromCookie = request.cookies.get(Play.langCookieName).flatMap(c => Lang.get(c.value))
@@ -44,7 +47,7 @@ object LanguageUtils {
     private val welshLocale = new ULocale(WelshLangCode)
     private val englishLocale = new ULocale(EnglishLangCode)
 
-    private def createDateFormatForPattern(pattern: String)(implicit lang: Lang) = {
+    private def createDateFormatForPattern(pattern: String)(implicit lang: Lang): SimpleDateFormat = {
       val locale = if (lang.code == WelshLangCode) welshLocale else englishLocale
       val sdf = new SimpleDateFormat(pattern, locale)
       sdf.setTimeZone(londonTimeZone)
@@ -77,6 +80,11 @@ object LanguageUtils {
       }
 
     def shortDate(date: LocalDate)(implicit lang: Lang) = shortDateFormat.format(date.toDate)
+
+    def formatDateRange(startDate: LocalDate, endDate: LocalDate)(implicit lang: Lang) = {
+      Seq(formatDate(startDate), Messages("language.to"), formatDate(endDate)).mkString(" ")
+    }
+
 
     def formatDays(numberOfDays: Int)(implicit lang: Lang) = {
       val dayOrDays = if(numberOfDays == 1) Messages("language.day.singular") else Messages("language.day.plural")

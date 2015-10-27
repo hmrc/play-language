@@ -30,7 +30,7 @@ trait LanguageController extends Controller {
 
   private def switchToLang(lang: Lang) = Action { implicit request =>
     request.headers.get(REFERER) match {
-      case Some(referrer) => Redirect(referrer).withLang(lang)
+      case Some(referrer) => Redirect(referrer).withLang(lang).flashing(LanguageUtils.FlashWithSwitchIndicator)
       case None => Redirect(Call("GET", fallbackURL)).withLang(lang)
     }
   }
