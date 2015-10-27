@@ -19,17 +19,17 @@ package uk.gov.hmrc.play.language
 import com.ibm.icu.text.SimpleDateFormat
 import com.ibm.icu.util.{TimeZone, ULocale}
 import org.joda.time.{DateTime, LocalDate}
-import play.api.{Logger, Play}
+import play.api.Play
 import play.api.i18n.{Lang, Messages}
 import play.api.mvc._
 
 object LanguageUtils {
 
-  val English = Lang("en")
-  val Welsh = Lang("cy")
+  val English = Lang("en", "GB")
+  val Welsh = Lang("cy", "GB")
 
-  val WelshLangCode = "cy"
-  val EnglishLangCode = "en"
+  val WelshLangCode = "cy-GB"
+  val EnglishLangCode = "en-GB"
 
   def getCurrentLang(implicit request: RequestHeader): Lang = {
     Play.maybeApplication.map { implicit app =>
@@ -79,8 +79,6 @@ object LanguageUtils {
     def shortDate(date: LocalDate)(implicit lang: Lang) = shortDateFormat.format(date.toDate)
 
     def formatDays(numberOfDays: Int)(implicit lang: Lang) = {
-      Logger.warn("format days")
-      Logger.warn(lang.code)
       val dayOrDays = if(numberOfDays == 1) Messages("language.day.singular") else Messages("language.day.plural")
       s"$numberOfDays $dayOrDays"
     }

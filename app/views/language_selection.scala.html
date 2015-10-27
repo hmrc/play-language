@@ -3,8 +3,9 @@
 @import play.api.i18n.Messages
 @import uk.gov.hmrc.urls.Link
 @import uk.gov.hmrc.play.language.routes
+@import uk.gov.hmrc.play.language.LanguageUtils.WelshLangCode
 
-@if(lang.code == "cy") {
+@if(lang.code == WelshLangCode) {
     <p class="float--right">
         @Link.toInternalPage(id = Some("english-switch"),
                             url = s"${routes.LanguageController.switchToEnglish}",
