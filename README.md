@@ -54,7 +54,7 @@ The plugin expects to find the fallback URL in an `application.conf` under the k
 When you need to show a language switch to the user, use the language selection template.
 
 ```
-    @language_selection(None)			// No custom classes.
+    @language_selection(None)					// No custom classes.
     @language_selection(Some("custom-class"))	// Custom classes.
 ```
 
