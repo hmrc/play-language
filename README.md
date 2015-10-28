@@ -1,4 +1,4 @@
-#Play Language Support Plugin
+#Play Language Plugin
 
 [![Apache-2.0 license](http://img.shields.io/badge/license-Apache-brightgreen.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
 
@@ -50,6 +50,14 @@ The plugin expects to find the fallback URL in an `application.conf` under the k
     	fallbackUrl = "https://localhost:$port/some-service-url/"
     }
 ```
+
+When you need to show a language switch to the user, use the language selection template.
+
+```
+    @language_selection(Some("custom-class"))
+```
+
+In order to show Welsh text to the user, create a `messages.cy` file within `/conf` and put your translations within there, using the same message keys.
 
 ## License ##
  
