@@ -58,6 +58,12 @@ When you need to show a language switch to the user, use the language selection 
     @language_selection(Some("custom-class"))	// Custom classes.
 ```
 
+Add an implicit Lang object to each view you wish to support multiple languages.
+
+```
+    @()(implicit lang: Lang)
+```
+
 In order to show Welsh text to the user, create a `messages.cy` file within `/conf` and put your translations within there, using the same message keys.
 
 ## License ##
