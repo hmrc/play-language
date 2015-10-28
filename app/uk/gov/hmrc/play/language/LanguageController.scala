@@ -23,17 +23,19 @@ import LanguageUtils.{English, Welsh}
 
 trait LanguageController extends Controller {
 
-  def switchToEnglish = switchToLang(English)
-  def switchToWelsh = switchToLang(Welsh)
-
   private def fallbackURL = current.configuration.getString("language.fallbackUrl").getOrElse("/")
 
-  private def switchToLang(lang: Lang) = Action { implicit request =>
+  protected def switchToLang(lang: Lang) = Action { implicit request =>
     request.headers.get(REFERER) match {
-      case Some(referrer) => Redirect(referrer).withLang(lang).flashing(LanguageUtils.FlashWithSwitchIndicator)
+      case Some(ref) => Redirect(ref).withLang(lang).flashing(LanguageUtils.FlashWithSwitchIndicator)
       case None => Redirect(Call("GET", fallbackURL)).withLang(lang)
     }
   }
 }
 
-object LanguageController extends LanguageController
+object LanguageController extends LanguageController {
+
+  def switchToEnglish = switchToLang(English)
+  def switchToWelsh   = switchToLang(Welsh)
+
+}

@@ -25,11 +25,11 @@ import play.api.mvc._
 
 object LanguageUtils {
 
-  val English = Lang("en", "GB")
-  val Welsh = Lang("cy", "GB")
-
-  val WelshLangCode = "cy-GB"
   val EnglishLangCode = "en-GB"
+  val WelshLangCode   = "cy-GB"
+
+  val English = Lang(EnglishLangCode)
+  val Welsh   = Lang(WelshLangCode)
 
   val SwitchIndicatorKey = "switching-language"
   val FlashWithSwitchIndicator = Flash(Map(SwitchIndicatorKey -> "true"))
