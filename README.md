@@ -54,7 +54,8 @@ The plugin expects to find the fallback URL in an `application.conf` under the k
 When you need to show a language switch to the user, use the language selection template.
 
 ```
-    @language_selection(Some("custom-class"))
+    @language_selection(None)			// No custom classes.
+    @language_selection(Some("custom-class"))	// Custom classes.
 ```
 
 In order to show Welsh text to the user, create a `messages.cy` file within `/conf` and put your translations within there, using the same message keys.
