@@ -1,10 +1,10 @@
-#Play Language Plugin
+#Play Language
 
 [![Apache-2.0 license](http://img.shields.io/badge/license-Apache-brightgreen.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
 
 [![Build Status](https://travis-ci.org/hmrc/play-language.svg)](https://travis-ci.org/hmrc/play-language) [ ![Download](https://api.bintray.com/packages/hmrc/releases/play-language/images/download.svg) ](https://bintray.com/hmrc/releases/play-language/_latestVersion)
 
-Plugin to provide common language support and switching functionality for Play +2.2.3 projects.
+Play library to provide common language support and switching functionality for Play +2.2.3 projects.
 
 ##Endpoints
 
@@ -17,17 +17,11 @@ This adds two endpoints:
 
 ##Setup
 
-Add the jar to the projects dependencies:
+Add the library to the project dependencies:
 
 ``` scala
     resolvers += Resolver.bintrayRepo("hmrc", "releases")
     libraryDependencies += "uk.gov.hmrc" %% "play-language" % "[INSERT VERSION]"
-```
-
-Add plugin to play.plugins:
-
-```
-    {priority}:uk.gov.hmrc.play.language.LanguagePlugin
 ```
 
 Add the following to the routes file:
