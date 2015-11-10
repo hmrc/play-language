@@ -19,8 +19,9 @@ This adds two endpoints:
 
 Add the jar to the projects dependencies:
 
-```
-    "uk.gov.hmrc" %% "play-language" % "[INSERT VERSION]"
+``` scala
+    resolvers += Resolver.bintrayRepo("hmrc", "releases")
+    libraryDependencies += "uk.gov.hmrc" %% "play-language" % "[INSERT VERSION]"
 ```
 
 Add plugin to play.plugins:
@@ -54,13 +55,13 @@ The plugin expects to find the fallback URL in an `application.conf` under the k
 When you need to show a language switch to the user, use the language selection template.
 
 ```
-    @language_selection(None)					// No custom classes.
+    @language_selection()					// No custom classes.
     @language_selection(Some("custom-class"))	// Custom classes.
 ```
 
 Add an implicit Lang object to each view you wish to support multiple languages.
 
-```
+``` scala
     @()(implicit lang: Lang)
 ```
 
