@@ -17,8 +17,7 @@
 import org.joda.time.{DateTime, LocalDate}
 import org.scalatest.{FlatSpec, Matchers}
 import org.scalatestplus.play.OneAppPerSuite
-import play.api.test.FakeApplication
-import play.api.test.Helpers._
+import play.api.i18n.Lang
 import uk.gov.hmrc.play.language.LanguageUtils._
 import uk.gov.hmrc.play.language.LanguageUtils.Dates._
 
@@ -30,6 +29,14 @@ class LanguageUtilsSpec extends FlatSpec with Matchers with OneAppPerSuite {
   "Method formatDate(date: LocalDate)" should "return correctly formatted date in both English and Welsh" in {
     formatDate(date)(English) shouldBe "25 January 2015"
     formatDate(date)(Welsh) shouldBe "25 Ionawr 2015"
+  }
+
+  "Method formatDate(date: LocalDate)" should "return correctly formatted date in another Language" in {
+    formatDate(date)(Lang("es")) shouldBe "25 enero 2015"
+  }
+
+  "Method formatDate(date: LocalDate)" should "return correctly formatted date when no language defined" in {
+    formatDate(date) shouldBe "25 January 2015"
   }
 
   "Method formatDate(date: Option[LocalDate], default: String)" should "return correctly formatted date in both English and Welsh" in {

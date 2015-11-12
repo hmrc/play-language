@@ -21,10 +21,32 @@ import play.api.mvc.{Action, Call, Controller}
 import play.api.Play.current
 import LanguageUtils.{English, Welsh}
 
+/**
+  * LanguageController that switches the language of the current web application.
+  *
+  * This trait provides a means of switching the current language and redirecting the user
+  * back to their original location. It expects a fallbackURL to be defined when implemented.
+  *
+  */
 trait LanguageController extends Controller {
 
-  private def fallbackURL = current.configuration.getString("language.fallbackUrl").getOrElse("/")
+  /** A URL to fallback to if there is no referer found in the request header **/
+  protected def fallbackURL: String
 
+  /**
+    * A function to switch the current language of the application.
+    *
+    * This function expects a Lang object as a parameter and will use this to switch
+    * the current application language. This function expects a referer value within
+    * the request header, and will redirect the user back to that value. If it is not
+    * set then the redirect will be to the fallbackURL.
+    *
+    * The returned Redirect object will also contain a flashing parameter which can be
+    * detected by controllers in order to show different behaviour if wanted.
+    *
+    * @param lang - The new language to switch to.
+    * @return A Redirect to either the referer or fallbackURL, with the new language set.
+    */
   protected def switchToLang(lang: Lang) = Action { implicit request =>
     request.headers.get(REFERER) match {
       case Some(ref) => Redirect(ref).withLang(lang).flashing(LanguageUtils.FlashWithSwitchIndicator)
@@ -33,9 +55,15 @@ trait LanguageController extends Controller {
   }
 }
 
+/**
+  * Default implementation of the LanguageController.
+  *
+  * Adds support for switching the user between English and Welsh.
+  */
 object LanguageController extends LanguageController {
+
+  override def fallbackURL = current.configuration.getString("language.fallbackUrl").getOrElse("/")
 
   def switchToEnglish = switchToLang(English)
   def switchToWelsh   = switchToLang(Welsh)
-
 }
