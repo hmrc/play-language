@@ -8,11 +8,10 @@ Play library to provide common language support and switching functionality for 
 
 ##Endpoints
 
-This adds two endpoints:
+This adds a new endpoint:
 
 ```
-     /switch-to-english     - Switches the current language to English
-	 /switch-to-welsh 		- SWitches the current language to Welsh
+     /language/:lang     - Switches the current language to the lang, if defined in languageMap.
 ```
 
 ##Setup
@@ -30,7 +29,7 @@ Add the following to the routes file:
     ->     /                                    language.Routes
 ```
 
-Additionally, add the following to the application conf file:
+Additionally, add the following to the application conf file for each language you support:
 
 ```
     application.langs="en,cy"
@@ -60,6 +59,25 @@ Add an implicit Lang object to each view you wish to support multiple languages.
 ```
 
 In order to show Welsh text to the user, create a `messages.cy` file within `/conf` and put your translations within there, using the same message keys.
+
+## Extending
+
+To provide support for more languages, create your own custom LanguageController:
+
+``` scala
+    object CustomLanguageController extends LanguageController {
+      override def fallbackURL = current.configuration.getString("language.fallbackUrl").getOrElse("/")
+      override def languageMap = Map("english" -> Lang("en-GB"),
+                                     "spanish" -> Lang("es"),
+                                     "french"  -> Lang("fr"))
+    }
+```
+
+Then replace the above routes code with:
+
+```
+    GET     /language/:lang       uk.gov.hmrc.project.CustomLanguageController.switchToLanguage(lang: String)
+```
 
 ## License ##
  
