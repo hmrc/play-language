@@ -1,16 +1,14 @@
-@import play.api.i18n.Messages
 @import uk.gov.hmrc.urls.Link
-@import uk.gov.hmrc.play.language.routes
-@import uk.gov.hmrc.play.language.LanguageController
 
-@(customClass: Option[String] = None, langMap: Map[String, Lang] = LanguageController.languageMap)(implicit lang: Lang)
+@(customClass: Option[String] = None, langMap: Map[String, Lang], langToUrl: (String => Call))(implicit lang: Lang)
 
 <p class="@if(customClass.isDefined) {@customClass.get}">
     @langMap.map { case (key: String, value: Lang) =>
             @if(lang.code != value.code) {
-                @Link.toInternalPage(id = Some(s"$key-switch"),
-                url = s"${routes.LanguageController.switchToLanguage(key)}",
-                value = Some(key.capitalize)).toHtml
+                @Link.toInternalPage(
+                    id      = Some(s"$key-switch"),
+                    url     = s"${langToUrl(key)}",
+                    value   = Some(key.capitalize)).toHtml
             } else {
                @key.capitalize
             }

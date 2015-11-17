@@ -29,29 +29,26 @@ import uk.gov.hmrc.play.language.LanguageUtils._
 
 class LanguageControllerSpec extends WordSpec with ShouldMatchers with PlayRunners with ScalaFutures with DefaultAwaitTimeout with IntegrationPatience {
 
-  val routerKey       = "application.router"
-  val routerValue     = "language.Routes"
-  val routerConfig    = Map(routerKey -> routerValue)
-
   val fallbackKey     = "Test.language.fallbackUrl"
   val fallbackValue   = "www.gov.uk"
   val fallbackConfig  = Map(fallbackKey -> fallbackValue)
+
+  val mockLanguageController = new LanguageController {
+    override protected def fallbackURL: String = ???
+    override def languageMap: Map[String, Lang] = Map("english" -> English,
+                                                      "cymraeg" -> Welsh)
+  }
 
   trait Resource { this: WithServer =>
     def resource(path: String) = WS.url(s"http://localhost:$port" + path).get().futureValue
   }
 
   abstract class ServerWithConfig(conf: Map[String, String] = Map.empty) extends
-    WithServer(FakeApplication(additionalConfiguration = routerConfig ++ conf)) with Resource
+    WithServer(FakeApplication(additionalConfiguration = conf)) with Resource
 
   "ServerWithConfig" should { 
 
     import play.api.Play.current
-
-    "return language routes configuration when created" in
-      new ServerWithConfig() {
-          current.configuration.getString(routerKey).get should be (routerValue)
-      }
 
     "return fallback URL when additional configuration is set" in
       new ServerWithConfig(fallbackConfig) {
@@ -66,8 +63,14 @@ class LanguageControllerSpec extends WordSpec with ShouldMatchers with PlayRunne
 
     "respond with a See Other (303) status when a referer is in the header." in
       new ServerWithConfig() {
+
         val request = englishRequest.withHeaders(REFERER -> fallbackValue)
-        val Some(result) = route(request)
+        val res = mockLanguageController.switchToLanguage("english")(request)
+
+        val Some(result) = res
+
+
+
         status(result) should be (SEE_OTHER)
       }
 

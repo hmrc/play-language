@@ -19,8 +19,6 @@ package uk.gov.hmrc.play.language
 import play.api.i18n.Lang
 import play.api.mvc._
 import play.api.Play.current
-import uk.gov.hmrc.play.config.RunMode
-import LanguageUtils.{English, Welsh}
 
 /**
   * LanguageController that switches the language of the current web application.
@@ -36,7 +34,7 @@ trait LanguageController extends Controller {
   protected def fallbackURL: String
 
   /** A map from a String to Lang object **/
-  protected def languageMap: Map[String, Lang]
+  def languageMap: Map[String, Lang]
 
   /**
     * A function to switch the current language of the application.
@@ -73,15 +71,4 @@ trait LanguageController extends Controller {
       case None             => Action {Redirect(fallbackURL)}
     }
   }
-}
-
-/**
-  * Default implementation of the LanguageController.
-  *
-  * Adds support for switching the user between English and Welsh.
-  */
-object LanguageController extends LanguageController with RunMode {
-  override def fallbackURL = current.configuration.getString(s"$env.language.fallbackUrl").getOrElse("/")
-  override def languageMap = Map("english" -> English,
-                                 "cymraeg" -> Welsh)
 }

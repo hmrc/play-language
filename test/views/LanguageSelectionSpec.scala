@@ -18,45 +18,50 @@ package views
 
 import org.scalatest._
 import play.api.i18n.{Lang, Messages}
+import play.api.mvc.{PathBindable, Call}
 import play.api.test.FakeApplication
 import play.api.test.Helpers._
-import uk.gov.hmrc.play.language.LanguageController
 import uk.gov.hmrc.play.language.LanguageUtils.{English, Welsh}
 
 class LanguageSelectionSpec extends WordSpec with ShouldMatchers {
 
+  def languageMap: Map[String, Lang] = Map("english" -> English,
+                                           "cymraeg" -> Welsh)
+
+  def langToUrl(lang: String): Call = Call("GET", "/language/" + implicitly[PathBindable[String]].unbind("lang", lang))
+
   "Language selection template view" should {
 
     "give a link to switch to Welsh when current language is English" in {
-      val html = views.html.language_selection.render(None, LanguageController.languageMap, English)
+      val html = views.html.language_selection.render(None, languageMap, langToUrl(_), English)
       contentType(html) should be ("text/html")
       contentAsString(html) should include (Messages("id=\"cymraeg-switch\""))
       contentAsString(html) should include ("/language/cymraeg")
     }
 
     "show correct current language message when current language is English" in running(new FakeApplication) {
-      val html = views.html.language_selection.render(None, LanguageController.languageMap, English)
+      val html = views.html.language_selection.render(None, languageMap, langToUrl(_), English)
       contentType(html) should be ("text/html")
       contentAsString(html) should include ("English")
       contentAsString(html) should not include ">English<"
     }
 
     "give a link to switch to English when current language is Welsh" in {
-      val html = views.html.language_selection.render(None, LanguageController.languageMap, Welsh)
+      val html = views.html.language_selection.render(None, languageMap, langToUrl(_), Welsh)
       contentType(html) should be ("text/html")
       contentAsString(html) should include (Messages("id=\"english-switch\""))
       contentAsString(html) should include ("/language/english")
     }
 
     "show correct current language message when current language is Welsh" in running(new FakeApplication) {
-      val html = views.html.language_selection.render(None, LanguageController.languageMap, Welsh)
+      val html = views.html.language_selection.render(None, languageMap, langToUrl(_), Welsh)
       contentType(html) should be ("text/html")
       contentAsString(html) should include ("Cymraeg")
       contentAsString(html) should not include ">Cymraeg<"
     }
 
     "show a custom class if it is set" in running(new FakeApplication) {
-      val html = views.html.language_selection.render(Some("float--right"), LanguageController.languageMap, Welsh)
+      val html = views.html.language_selection.render(Some("float--right"), languageMap, langToUrl(_), Welsh)
       contentType(html) should be ("text/html")
       contentAsString(html) should include ("class=\"float--right\"")
     }
@@ -67,7 +72,7 @@ class LanguageSelectionSpec extends WordSpec with ShouldMatchers {
                                 "cymraeg" -> Welsh,
                                 "español" -> Lang("es"))
 
-      val html = views.html.language_selection.render(None, mockLanguageMap, Lang("es"))
+      val html = views.html.language_selection.render(None, mockLanguageMap, langToUrl(_), Lang("es"))
       contentType(html) should be ("text/html")
       contentAsString(html) should include ("Español")
       contentAsString(html) should not include ">Español<"
