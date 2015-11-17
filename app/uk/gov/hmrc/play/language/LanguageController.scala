@@ -17,7 +17,7 @@
 package uk.gov.hmrc.play.language
 
 import play.api.i18n.Lang
-import play.api.mvc.{Action, Call, Controller}
+import play.api.mvc._
 import play.api.Play.current
 import LanguageUtils.{English, Welsh}
 
@@ -26,12 +26,16 @@ import LanguageUtils.{English, Welsh}
   *
   * This trait provides a means of switching the current language and redirecting the user
   * back to their original location. It expects a fallbackURL to be defined when implemented.
+  * It also expects a languageMap to be defined, this provides a way of mapping strings to Lang objects.
   *
   */
 trait LanguageController extends Controller {
 
   /** A URL to fallback to if there is no referer found in the request header **/
   protected def fallbackURL: String
+
+  /** A map from a String to Lang object **/
+  protected def languageMap: Map[String, Lang]
 
   /**
     * A function to switch the current language of the application.
@@ -47,10 +51,25 @@ trait LanguageController extends Controller {
     * @param lang - The new language to switch to.
     * @return A Redirect to either the referer or fallbackURL, with the new language set.
     */
-  protected def switchToLang(lang: Lang) = Action { implicit request =>
+  private def redirectWithLang(lang: Lang) = Action { implicit request =>
     request.headers.get(REFERER) match {
       case Some(ref) => Redirect(ref).withLang(lang).flashing(LanguageUtils.FlashWithSwitchIndicator)
-      case None => Redirect(Call("GET", fallbackURL)).withLang(lang)
+      case None      => Redirect(fallbackURL).withLang(lang).flashing(LanguageUtils.FlashWithSwitchIndicator)
+    }
+  }
+
+  /**
+    * A public interface to switch to a new language.
+    *
+    * The language must be defined within the language map else no language will be set.
+    *
+    * @param language - The language string to switch to.
+    * @return Redirect to referer or fallbackURL, with new language. Or fallbackURL with default lang.
+    */
+  def switchToLanguage(language: String): Action[AnyContent] = {
+    languageMap.get(language) match {
+      case Some(lang: Lang) => redirectWithLang(lang)
+      case None             => Action {Redirect(fallbackURL)}
     }
   }
 }
@@ -61,9 +80,7 @@ trait LanguageController extends Controller {
   * Adds support for switching the user between English and Welsh.
   */
 object LanguageController extends LanguageController {
-
   override def fallbackURL = current.configuration.getString("language.fallbackUrl").getOrElse("/")
-
-  def switchToEnglish = switchToLang(English)
-  def switchToWelsh   = switchToLang(Welsh)
+  override def languageMap = Map("english" -> English,
+                                 "welsh"   -> Welsh)
 }

@@ -60,7 +60,7 @@ class LanguageControllerSpec extends WordSpec with ShouldMatchers with PlayRunne
 
   "The switch to English endpoint" should {
 
-    val englishRequest = FakeRequest("GET", "/switch-to-english")
+    val englishRequest = FakeRequest("GET", "/language/english")
 
     "respond with a See Other (303) status when a referer is in the header." in
       new ServerWithConfig() {
@@ -105,7 +105,7 @@ class LanguageControllerSpec extends WordSpec with ShouldMatchers with PlayRunne
 
     "switch back to English after being switched to Welsh." in
       new ServerWithConfig() {
-        val Some(result) = route(FakeRequest("GET", "/switch-to-welsh"))
+        val Some(result) = route(FakeRequest("GET", "/language/welsh"))
         cookies(result).get(Play.langCookieName) match {
           case Some(c: Cookie) => c.value should be (WelshLangCode)
           case _ => fail("PLAY_LANG cookie was not found.")
@@ -121,7 +121,7 @@ class LanguageControllerSpec extends WordSpec with ShouldMatchers with PlayRunne
 
   "The switch to Welsh endpoint" should {
 
-    val welshRequest = FakeRequest("GET", "/switch-to-welsh")
+    val welshRequest = FakeRequest("GET", "/language/welsh")
 
     "respond with a See Other (303) status when a referer is in the header." in
       new ServerWithConfig() {
@@ -166,7 +166,7 @@ class LanguageControllerSpec extends WordSpec with ShouldMatchers with PlayRunne
 
     "switch back to Welsh after being switched to English."  in
       new ServerWithConfig() {
-        val Some(result) = route(FakeRequest("GET", "/switch-to-english"))
+        val Some(result) = route(FakeRequest("GET", "/language/english"))
         cookies(result).get(Play.langCookieName) match {
           case Some(c: Cookie) => c.value should be (EnglishLangCode)
           case _ => fail("PLAY_LANG cookie was not found.")

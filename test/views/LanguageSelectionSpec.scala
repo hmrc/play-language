@@ -30,7 +30,7 @@ class LanguageSelectionSpec extends WordSpec with ShouldMatchers {
       val html = views.html.language_selection.render(None, English)
       contentType(html) should be ("text/html")
       contentAsString(html) should include (Messages("id=\"welsh-switch\""))
-      contentAsString(html) should include ("/switch-to-welsh")
+      contentAsString(html) should include ("/language/welsh")
     }
 
     "show correct current language message when current language is English" in running(new FakeApplication) {
@@ -43,7 +43,7 @@ class LanguageSelectionSpec extends WordSpec with ShouldMatchers {
       val html = views.html.language_selection.render(None, Welsh)
       contentType(html) should be ("text/html")
       contentAsString(html) should include (Messages("id=\"english-switch\""))
-      contentAsString(html) should include ("/switch-to-english")
+      contentAsString(html) should include ("/language/english")
     }
 
     "show correct current language message when current language is Welsh" in running(new FakeApplication) {
