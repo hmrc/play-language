@@ -1,21 +1,19 @@
-@(customClass: Option[String] = None)(implicit lang: Lang)
-
 @import play.api.i18n.Messages
 @import uk.gov.hmrc.urls.Link
 @import uk.gov.hmrc.play.language.routes
-@import uk.gov.hmrc.play.language.LanguageUtils.WelshLangCode
+@import uk.gov.hmrc.play.language.LanguageController
 
-@if(lang.code == WelshLangCode) {
-    <p class="@if(customClass.isDefined) {@customClass.get}">
-        @Link.toInternalPage(id = Some("english-switch"),
-                            url = s"${routes.LanguageController.switchToLanguage("english")}",
-                          value = Some(s"${Messages("language.switch.english")}")).toHtml
-        | @Messages("language.switch.welsh")
-    </p>
-} else {
-    <p class="@if(customClass.isDefined) {@customClass.get}">@Messages("language.switch.english") |
-        @Link.toInternalPage(id = Some("welsh-switch"),
-                            url = s"${routes.LanguageController.switchToLanguage("welsh")}",
-                          value = Some(Messages("language.switch.welsh"))).toHtml
-    </p>
-}
+@(customClass: Option[String] = None, langMap: Map[String, Lang] = LanguageController.languageMap)(implicit lang: Lang)
+
+<p class="@if(customClass.isDefined) {@customClass.get}">
+    @langMap.map { case (key: String, value: Lang) =>
+            @if(lang.code != value.code) {
+                @Link.toInternalPage(id = Some(s"$key-switch"),
+                url = s"${routes.LanguageController.switchToLanguage(key)}",
+                value = Some(key.capitalize)).toHtml
+            } else {
+               @key.capitalize
+            }
+            @if(key != langMap.last._1) { @Html(" | ") }
+    }
+</p>

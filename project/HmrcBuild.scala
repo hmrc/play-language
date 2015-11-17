@@ -34,6 +34,7 @@ object HmrcBuild extends Build {
       scalaVersion := "2.11.7",
       crossScalaVersions := Seq("2.11.7"),
       libraryDependencies ++= Seq(
+        Compile.playConfig,
         Compile.playFramework,
         Compile.playWS,
         Compile.frontendBootstrap,
@@ -58,11 +59,13 @@ private object AppDependencies {
     private val frontendBootstrapVersion = "1.1.0"
     private val urlBuilderVersion        = "1.0.0"
     private val ibm4jVersion             = "54.1.1"
+    private val playConfigVersion             = "2.0.1"
 
     val playFramework     = "com.typesafe.play" %% "play" % PlayVersion.current % "provided"
     val playWS            = PlayImport.ws % "provided"
     val frontendBootstrap = "uk.gov.hmrc" %% "frontend-bootstrap" % frontendBootstrapVersion
     val urlBuilder        = "uk.gov.hmrc" %% "url-builder"        % urlBuilderVersion
+    val playConfig        = "uk.gov.hmrc" %% "play-config"        % playConfigVersion
     val ibm4j             = "com.ibm.icu" % "icu4j"               % ibm4jVersion
 
   }

@@ -19,6 +19,7 @@ package uk.gov.hmrc.play.language
 import play.api.i18n.Lang
 import play.api.mvc._
 import play.api.Play.current
+import uk.gov.hmrc.play.config.RunMode
 import LanguageUtils.{English, Welsh}
 
 /**
@@ -79,8 +80,8 @@ trait LanguageController extends Controller {
   *
   * Adds support for switching the user between English and Welsh.
   */
-object LanguageController extends LanguageController {
-  override def fallbackURL = current.configuration.getString("language.fallbackUrl").getOrElse("/")
+object LanguageController extends LanguageController with RunMode {
+  override def fallbackURL = current.configuration.getString(s"$env.language.fallbackUrl").getOrElse("/")
   override def languageMap = Map("english" -> English,
-                                 "welsh"   -> Welsh)
+                                 "cymraeg" -> Welsh)
 }

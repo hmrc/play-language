@@ -19,6 +19,8 @@ package uk.gov.hmrc.play.language
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.{WordSpec, ShouldMatchers}
 import play.api.Play
+import play.api.Play._
+import play.api.i18n.Lang
 import play.api.libs.ws.WS
 import play.api.mvc.Cookie
 import play.api.test._
@@ -31,7 +33,7 @@ class LanguageControllerSpec extends WordSpec with ShouldMatchers with PlayRunne
   val routerValue     = "language.Routes"
   val routerConfig    = Map(routerKey -> routerValue)
 
-  val fallbackKey     = "language.fallbackUrl"
+  val fallbackKey     = "Test.language.fallbackUrl"
   val fallbackValue   = "www.gov.uk"
   val fallbackConfig  = Map(fallbackKey -> fallbackValue)
 
@@ -105,7 +107,7 @@ class LanguageControllerSpec extends WordSpec with ShouldMatchers with PlayRunne
 
     "switch back to English after being switched to Welsh." in
       new ServerWithConfig() {
-        val Some(result) = route(FakeRequest("GET", "/language/welsh"))
+        val Some(result) = route(FakeRequest("GET", "/language/cymraeg"))
         cookies(result).get(Play.langCookieName) match {
           case Some(c: Cookie) => c.value should be (WelshLangCode)
           case _ => fail("PLAY_LANG cookie was not found.")
@@ -121,7 +123,7 @@ class LanguageControllerSpec extends WordSpec with ShouldMatchers with PlayRunne
 
   "The switch to Welsh endpoint" should {
 
-    val welshRequest = FakeRequest("GET", "/language/welsh")
+    val welshRequest = FakeRequest("GET", "/language/cymraeg")
 
     "respond with a See Other (303) status when a referer is in the header." in
       new ServerWithConfig() {
@@ -177,6 +179,6 @@ class LanguageControllerSpec extends WordSpec with ShouldMatchers with PlayRunne
           case _ => fail("PLAY_LANG cookie was not found.")
         }
       }
-
   }
+
 }

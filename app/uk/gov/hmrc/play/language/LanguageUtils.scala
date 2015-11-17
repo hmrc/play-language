@@ -35,7 +35,7 @@ import play.api.mvc._
   */
 object LanguageUtils {
 
-  val EnglishLangCode = "en-GB"
+  val EnglishLangCode = "en"
   val WelshLangCode   = "cy-GB"
 
   val English = Lang(EnglishLangCode)
