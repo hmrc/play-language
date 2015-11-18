@@ -37,7 +37,9 @@ trait LanguageController extends Controller {
   def languageMap: Map[String, Lang]
 
   /**
-    * A function to switch the current language of the application.
+    * A public interface to switch to a new language.
+    *
+    * The language must be defined within the language map else the current language will be used.
     *
     * This function expects a Lang object as a parameter and will use this to switch
     * the current application language. This function expects a referer value within
@@ -47,28 +49,15 @@ trait LanguageController extends Controller {
     * The returned Redirect object will also contain a flashing parameter which can be
     * detected by controllers in order to show different behaviour if wanted.
     *
-    * @param lang - The new language to switch to.
-    * @return A Redirect to either the referer or fallbackURL, with the new language set.
-    */
-  private def redirectWithLang(lang: Lang) = Action { implicit request =>
-    request.headers.get(REFERER) match {
-      case Some(ref) => Redirect(ref).withLang(lang).flashing(LanguageUtils.FlashWithSwitchIndicator)
-      case None      => Redirect(fallbackURL).withLang(lang).flashing(LanguageUtils.FlashWithSwitchIndicator)
-    }
-  }
-
-  /**
-    * A public interface to switch to a new language.
-    *
-    * The language must be defined within the language map else no language will be set.
-    *
     * @param language - The language string to switch to.
     * @return Redirect to referer or fallbackURL, with new language. Or fallbackURL with default lang.
     */
-  def switchToLanguage(language: String): Action[AnyContent] = {
-    languageMap.get(language) match {
-      case Some(lang: Lang) => redirectWithLang(lang)
-      case None             => Action {Redirect(fallbackURL)}
-    }
+  def switchToLanguage(language: String) = Action { implicit request =>
+
+    val lang        = languageMap.getOrElse(language, LanguageUtils.getCurrentLang)
+    val redirectURL = request.headers.get(REFERER).getOrElse(fallbackURL)
+
+    Redirect(redirectURL).withLang(lang).flashing(LanguageUtils.FlashWithSwitchIndicator)
+
   }
 }

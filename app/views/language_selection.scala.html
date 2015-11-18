@@ -1,14 +1,17 @@
 @import uk.gov.hmrc.urls.Link
 
-@(customClass: Option[String] = None, langMap: Map[String, Lang], langToUrl: (String => Call))(implicit lang: Lang)
+@(langMap  : Map[String, Lang],
+langToCall : (String => Call),
+customClass: Option[String] = None)(implicit lang: Lang)
 
 <p class="@if(customClass.isDefined) {@customClass.get}">
     @langMap.map { case (key: String, value: Lang) =>
             @if(lang.code != value.code) {
                 @Link.toInternalPage(
                     id      = Some(s"$key-switch"),
-                    url     = s"${langToUrl(key)}",
-                    value   = Some(key.capitalize)).toHtml
+                    url     = s"${langToCall(key)}",
+                    value   = Some(key.capitalize)
+                ).toHtml
             } else {
                @key.capitalize
             }

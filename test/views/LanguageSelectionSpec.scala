@@ -33,46 +33,48 @@ class LanguageSelectionSpec extends WordSpec with ShouldMatchers {
   "Language selection template view" should {
 
     "give a link to switch to Welsh when current language is English" in {
-      val html = views.html.language_selection.render(None, languageMap, langToUrl(_), English)
+      val html = views.html.language_selection.render(languageMap, langToUrl(_), None, English)
       contentType(html) should be ("text/html")
       contentAsString(html) should include (Messages("id=\"cymraeg-switch\""))
       contentAsString(html) should include ("/language/cymraeg")
     }
 
     "show correct current language message when current language is English" in running(new FakeApplication) {
-      val html = views.html.language_selection.render(None, languageMap, langToUrl(_), English)
+      val html = views.html.language_selection.render(languageMap, langToUrl(_), None, English)
       contentType(html) should be ("text/html")
       contentAsString(html) should include ("English")
       contentAsString(html) should not include ">English<"
     }
 
     "give a link to switch to English when current language is Welsh" in {
-      val html = views.html.language_selection.render(None, languageMap, langToUrl(_), Welsh)
+      val html = views.html.language_selection.render(languageMap, langToUrl(_), None, Welsh)
       contentType(html) should be ("text/html")
       contentAsString(html) should include (Messages("id=\"english-switch\""))
       contentAsString(html) should include ("/language/english")
     }
 
     "show correct current language message when current language is Welsh" in running(new FakeApplication) {
-      val html = views.html.language_selection.render(None, languageMap, langToUrl(_), Welsh)
+      val html = views.html.language_selection.render(languageMap, langToUrl(_), None, Welsh)
       contentType(html) should be ("text/html")
       contentAsString(html) should include ("Cymraeg")
       contentAsString(html) should not include ">Cymraeg<"
     }
 
     "show a custom class if it is set" in running(new FakeApplication) {
-      val html = views.html.language_selection.render(Some("float--right"), languageMap, langToUrl(_), Welsh)
+      val html = views.html.language_selection.render(languageMap, langToUrl(_), Some("float--right"), Welsh)
       contentType(html) should be ("text/html")
       contentAsString(html) should include ("class=\"float--right\"")
     }
 
     "show correct current language message when current language is Spanish" in running(new FakeApplication) {
 
+      val Spanish = Lang("es")
+
       val mockLanguageMap = Map("english" -> English,
                                 "cymraeg" -> Welsh,
-                                "español" -> Lang("es"))
+                                "español" -> Spanish)
 
-      val html = views.html.language_selection.render(None, mockLanguageMap, langToUrl(_), Lang("es"))
+      val html = views.html.language_selection.render(mockLanguageMap, langToUrl(_), None, Spanish)
       contentType(html) should be ("text/html")
       contentAsString(html) should include ("Español")
       contentAsString(html) should not include ">Español<"
