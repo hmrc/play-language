@@ -53,7 +53,7 @@ private object AppDependencies {
 
   object Compile {
 
-    private val urlBuilderVersion        = "1.0.0"
+    private val urlBuilderVersion        = "1.1.0"
     private val ibm4jVersion             = "54.1.1"
 
     val playFramework     = "com.typesafe.play" %% "play" % PlayVersion.current % "provided"
