@@ -14,7 +14,6 @@
  * limitations under the License.
  */
  
-import play.{PlayImport, PlayScala}
 import play.core.PlayVersion
 import sbt.Keys._
 import sbt._
@@ -28,7 +27,7 @@ object HmrcBuild extends Build {
   val appName = "play-language"
 
   lazy val playLanguage = (project in file("."))
-    .enablePlugins(PlayScala, SbtAutoBuildPlugin, SbtGitVersioning)
+    .enablePlugins(SbtAutoBuildPlugin, SbtGitVersioning)
     .settings(
       name := appName,
       scalaVersion := "2.11.7",
@@ -53,7 +52,7 @@ private object AppDependencies {
 
   object Compile {
 
-    private val urlBuilderVersion        = "1.1.0"
+    private val urlBuilderVersion        = "2.0.0"
     private val ibm4jVersion             = "54.1.1"
 
     val playFramework     = "com.typesafe.play" %% "play" % PlayVersion.current % "provided"
