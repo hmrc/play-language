@@ -38,7 +38,7 @@ object LanguageUtils {
   import play.api.i18n.Messages.Implicits._
 
   val EnglishLangCode = "en"
-  val WelshLangCode = "cy-GB"
+  val WelshLangCode = "cy"
 
   val English = Lang(EnglishLangCode)
   val Welsh = Lang(WelshLangCode)
