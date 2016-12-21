@@ -16,9 +16,11 @@
 
 package uk.gov.hmrc.play.language
 
-import play.api.i18n.Lang
+import javax.inject.Inject
+
+import play.api.i18n.{I18nSupport, Lang, MessagesApi}
 import play.api.mvc._
-import play.api.Play.current
+import play.mvc.Http.Context
 
 /**
   * LanguageController that switches the language of the current web application.
@@ -28,13 +30,15 @@ import play.api.Play.current
   * It also expects a languageMap to be defined, this provides a way of mapping strings to Lang objects.
   *
   */
-trait LanguageController extends Controller {
+trait LanguageController extends Controller with I18nSupport {
 
   /** A URL to fallback to if there is no referer found in the request header **/
   protected def fallbackURL: String
 
   /** A map from a String to Lang object **/
   def languageMap: Map[String, Lang]
+
+  @Inject() implicit def messagesApi: MessagesApi
 
   /**
     * A public interface to switch to a new language.
@@ -53,11 +57,9 @@ trait LanguageController extends Controller {
     * @return Redirect to referer or fallbackURL, with new language. Or fallbackURL with default lang.
     */
   def switchToLanguage(language: String) = Action { implicit request =>
-
-    val lang        = languageMap.getOrElse(language, LanguageUtils.getCurrentLang)
+    val lang = languageMap.getOrElse(language, LanguageUtils.getCurrentLang)
     val redirectURL = request.headers.get(REFERER).getOrElse(fallbackURL)
 
-    Redirect(redirectURL).withLang(lang).flashing(LanguageUtils.FlashWithSwitchIndicator)
-
+    Redirect(redirectURL).withLang(Lang.apply(lang.code)).flashing(LanguageUtils.FlashWithSwitchIndicator)
   }
 }

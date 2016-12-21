@@ -1,8 +1,8 @@
+@import play.api.Play.current
+@import play.api.i18n.Messages.Implicits._
 @import uk.gov.hmrc.urls.Link
 
-@(langMap  : Map[String, Lang],
-langToCall : (String => Call),
-customClass: Option[String] = None)(implicit lang: Lang)
+@(langMap  : Map[String, Lang], langToCall : (String => Call), customClass: Option[String] = None)(implicit lang: Lang)
 
 <p class="@if(customClass.isDefined) {@customClass.get}">
     @langMap.map { case (key: String, value: Lang) =>

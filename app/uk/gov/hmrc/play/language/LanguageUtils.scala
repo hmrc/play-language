@@ -35,11 +35,13 @@ import play.api.mvc._
   */
 object LanguageUtils {
 
+  import play.api.i18n.Messages.Implicits._
+
   val EnglishLangCode = "en"
-  val WelshLangCode   = "cy-GB"
+  val WelshLangCode = "cy"
 
   val English = Lang(EnglishLangCode)
-  val Welsh   = Lang(WelshLangCode)
+  val Welsh = Lang(WelshLangCode)
 
   val SwitchIndicatorKey = "switching-language"
   val FlashWithSwitchIndicator = Flash(Map(SwitchIndicatorKey -> "true"))
@@ -68,10 +70,15 @@ object LanguageUtils {
     * support for Welsh and English dates.
     */
   object Dates extends Dates {
+    import play.api.Play.current
+
     override def defaultTimeZone = TimeZone.getTimeZone("Europe/London")
-    override def to(implicit lang: Lang)       = Messages("language.to")
+
+    override def to(implicit lang: Lang) = Messages("language.to")
+
     override def singular(implicit lang: Lang) = Messages("language.day.singular")
-    override def plural(implicit lang: Lang)   = Messages("language.day.plural")
+
+    override def plural(implicit lang: Lang) = Messages("language.day.plural")
   }
 
   /**
@@ -81,29 +88,36 @@ object LanguageUtils {
     * by the IBM ICU library.
     *
     * This trait requires a default timezone to be defined, as well as String values for the English words:
-    *   - to
-    *   - day
-    *   - days
+    * - to
+    * - day
+    * - days
     *
     * These values should come from a Messages file for each language that needs to be supported.
     *
     */
   trait Dates {
 
-    /** The timezone to use when formatting dates*/
+    /** The timezone to use when formatting dates */
     def defaultTimeZone: TimeZone
+
     /** The value of the word 'to' **/
     def to(implicit lang: Lang): String
+
     /** The value of the singular of the word 'day' **/
     def singular(implicit lang: Lang): String
+
     /** The value of the plural of the word 'day' **/
     def plural(implicit lang: Lang): String
 
     /** Helper methods to format dates using various patterns **/
-    private def dateFormat(implicit lang: Lang)                 = createDateFormatForPattern("d MMMM y")
-    private def dateFormatAbbrMonth(implicit lang: Lang)        = createDateFormatForPattern("d MMM y")
-    private def shortDateFormat(implicit lang: Lang)            = createDateFormatForPattern("yyyy-MM-dd")
-    private def easyReadingDateFormat(implicit lang: Lang)      = createDateFormatForPattern("EEEE d MMMM yyyy")
+    private def dateFormat(implicit lang: Lang) = createDateFormatForPattern("d MMMM y")
+
+    private def dateFormatAbbrMonth(implicit lang: Lang) = createDateFormatForPattern("d MMM y")
+
+    private def shortDateFormat(implicit lang: Lang) = createDateFormatForPattern("yyyy-MM-dd")
+
+    private def easyReadingDateFormat(implicit lang: Lang) = createDateFormatForPattern("EEEE d MMMM yyyy")
+
     private def easyReadingTimestampFormat(implicit lang: Lang) = createDateFormatForPattern("h:mmaa")
 
     /**
@@ -113,13 +127,13 @@ object LanguageUtils {
       * Locale is used instead.
       *
       * @param pattern - The date format pattern as a String.
-      * @param lang - The implicit lang object.
+      * @param lang    - The implicit lang object.
       * @return - The SimpleDateFormat configured using the current language and pattern.
       */
     private def createDateFormatForPattern(pattern: String)(implicit lang: Lang): SimpleDateFormat = {
-      val langCode: String   = lang.code
+      val langCode: String = lang.code
       val validLang: Boolean = ULocale.getAvailableLocales.contains(new ULocale(langCode))
-      val locale: ULocale    = if (validLang) new ULocale((langCode)) else ULocale.getDefault
+      val locale: ULocale = if (validLang) new ULocale((langCode)) else ULocale.getDefault
       val sdf = new SimpleDateFormat(pattern, locale)
       sdf.setTimeZone(defaultTimeZone)
       sdf
@@ -151,15 +165,15 @@ object LanguageUtils {
       * Lang("cy") example: 25 Ionawr 2015
       * None example: default
       *
-      * @param date The Optional LocalDate object to convert.
+      * @param date    The Optional LocalDate object to convert.
       * @param default A default value to return if the date option is not set.
-      * @param lang The implicit lang object.
+      * @param lang    The implicit lang object.
       * @return Either the date as a "D MMMM Y" formatted string or the default value if not set.
       */
     def formatDate(date: Option[LocalDate], default: String)(implicit lang: Lang): String =
       date match {
         case Some(d) => formatDate(d)
-        case None    => default
+        case None => default
       }
 
     /**
@@ -187,9 +201,9 @@ object LanguageUtils {
       * Lang("en") example: "3:45am, Sunday 25 January 2015"
       * Lang("cy" example: "3:45am, Dydd Sul 25 Ionawr 2015"
       *
-      * @param date The optional DateTime object to convert.
+      * @param date    The optional DateTime object to convert.
       * @param default The default value to return if the date is missing.
-      * @param lang The implicit lang object.
+      * @param lang    The implicit lang object.
       * @return The date and time as a "h:mmaa, EEEE d MMMM yyyy" formatted string.
       */
     def formatEasyReadingTimestamp(date: Option[DateTime], default: String)(implicit lang: Lang) =
@@ -212,7 +226,7 @@ object LanguageUtils {
       *
       * @param date - The LocalDate object to be converted.
       * @param lang - The implicit language object.
-      * @return       The date as a "yyyy-MM-dd" formatted string.
+      * @return The date as a "yyyy-MM-dd" formatted string.
       */
     def shortDate(date: LocalDate)(implicit lang: Lang) = shortDateFormat.format(date.toDate)
 
@@ -225,8 +239,8 @@ object LanguageUtils {
       * Lang("cy") example: "25 Ionawr 2015 i 25 Ionawr 2015"
       *
       * @param startDate The first date.
-      * @param endDate The second date.
-      * @param lang The implicit lang value.
+      * @param endDate   The second date.
+      * @param lang      The implicit lang value.
       * @return A string in the format of "D MMMM Y to D MMMM Y"
       */
     def formatDateRange(startDate: LocalDate, endDate: LocalDate)(implicit lang: Lang) = {
@@ -244,15 +258,13 @@ object LanguageUtils {
       * 5, Lang("en") example: 5 days
       *
       * @param numberOfDays - The number of days.
-      * @param lang - The implicit language object.
+      * @param lang         - The implicit language object.
       * @return A string denoting "x" days.
       */
     def formatDays(numberOfDays: Int)(implicit lang: Lang) = {
-      val dayOrDays = if(numberOfDays == 1) singular else plural
+      val dayOrDays = if (numberOfDays == 1) singular else plural
       s"$numberOfDays $dayOrDays"
     }
-
   }
-
 
 }

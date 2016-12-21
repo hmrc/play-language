@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
-import play.{PlayImport, PlayScala}
+
 import play.core.PlayVersion
+import play.sbt.PlayScala
 import sbt.Keys._
 import sbt._
 import uk.gov.hmrc._
@@ -31,14 +31,13 @@ object HmrcBuild extends Build {
     .enablePlugins(PlayScala, SbtAutoBuildPlugin, SbtGitVersioning)
     .settings(
       name := appName,
-      scalaVersion := "2.11.7",
-      crossScalaVersions := Seq("2.11.7"),
+      scalaVersion := "2.11.8",
+      crossScalaVersions := Seq("2.11.8"),
       libraryDependencies ++= Seq(
         Compile.playFramework,
         Compile.urlBuilder,
         Compile.ibm4j,
         Test.playTest,
-        Test.scalaTest,
         Test.scalaTestPlus,
         Test.pegdown
       )
@@ -46,33 +45,31 @@ object HmrcBuild extends Build {
 
   resolvers += Resolver.typesafeRepo("releases")
   resolvers += Resolver.bintrayRepo("hmrc", "releases")
-    
 }
 
 private object AppDependencies {
 
   object Compile {
 
-    private val urlBuilderVersion        = "1.1.0"
-    private val ibm4jVersion             = "54.1.1"
+    private val urlBuilderVersion = "2.0.0"
+    private val ibm4jVersion = "54.1.1"
 
-    val playFramework     = "com.typesafe.play" %% "play" % PlayVersion.current % "provided"
-    val urlBuilder        = "uk.gov.hmrc" %% "url-builder"        % urlBuilderVersion
-    val ibm4j             = "com.ibm.icu" % "icu4j"               % ibm4jVersion
-
+    val playFramework = "com.typesafe.play" %% "play" % PlayVersion.current % "provided"
+    val urlBuilder = "uk.gov.hmrc" %% "url-builder" % urlBuilderVersion
+    val ibm4j = "com.ibm.icu" % "icu4j" % ibm4jVersion
   }
 
   sealed abstract class Test(scope: String) {
 
-    private val scalaTestVersion     = "2.2.4"
-    private val scalaTestPlusVersion = "1.1.0"
-    private val pegdownVersion       = "1.4.2"
+    private val scalaTestVersion = "2.2.4"
+    private val scalaTestPlusVersion = "1.4.0"
+    private val pegdownVersion = "1.4.2"
 
-    val playTest      = "com.typesafe.play" %% "play-test"   % PlayVersion.current  % scope
-    val scalaTest     = "org.scalatest"     %% "scalatest"   % scalaTestVersion     % scope
-    val scalaTestPlus = "org.scalatestplus" %  "play_2.11"   % scalaTestPlusVersion % scope
-    val pegdown       = "org.pegdown"       %  "pegdown"     % pegdownVersion       % scope
+    val playTest = "com.typesafe.play" %% "play-test" % PlayVersion.current % scope
+    val scalaTestPlus = "org.scalatestplus.play" %% "scalatestplus-play" % "1.5.0" % scope
+    val pegdown = "org.pegdown" % "pegdown" % pegdownVersion % scope
   }
 
   object Test extends Test("test")
+
 }
