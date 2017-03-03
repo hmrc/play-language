@@ -35,35 +35,35 @@ class LanguageSelectionSpec @Inject()(val messagesApi: MessagesApi) extends Play
   "Language selection template view" should {
 
     "give a link to switch to Welsh when current language is English" in {
-      val html = views.html.language_selection.render(languageMap, langToUrl(_), None,"" ,English)
+      val html = views.html.language_selection.render(languageMap, langToUrl(_), None, "", English)
       contentType(html) must be("text/html")
       contentAsString(html) must include(Messages("id=\"cymraeg-switch\""))
       contentAsString(html) must include("/language/cymraeg")
     }
 
     "show correct current language message when current language is English" in running(new FakeApplication) {
-      val html = views.html.language_selection.render(languageMap, langToUrl(_), None,"", English)
+      val html = views.html.language_selection.render(languageMap, langToUrl(_), None, "", English)
       contentType(html) must be("text/html")
       contentAsString(html) must include("English")
       contentAsString(html) must not include ">English<"
     }
 
     "give a link to switch to English when current language is Welsh" in {
-      val html = views.html.language_selection.render(languageMap, langToUrl(_), None, "",Welsh)
+      val html = views.html.language_selection.render(languageMap, langToUrl(_), None, "", Welsh)
       contentType(html) must be("text/html")
       contentAsString(html) must include(Messages("id=\"english-switch\""))
       contentAsString(html) must include("/language/english")
     }
 
     "show correct current language message when current language is Welsh" in running(new FakeApplication) {
-      val html = views.html.language_selection.render(languageMap, langToUrl(_), None,"", Welsh)
+      val html = views.html.language_selection.render(languageMap, langToUrl(_), None, "", Welsh)
       contentType(html) must be("text/html")
       contentAsString(html) must include("Cymraeg")
       contentAsString(html) must not include ">Cymraeg<"
     }
 
     "show a custom class if it is set" in running(new FakeApplication) {
-      val html = views.html.language_selection.render(languageMap, langToUrl(_), Some("float--right"),"", Welsh)
+      val html = views.html.language_selection.render(languageMap, langToUrl(_), Some("float--right"), "", Welsh)
       contentType(html) must be("text/html")
       contentAsString(html) must include("class=\"float--right\"")
     }
@@ -75,7 +75,7 @@ class LanguageSelectionSpec @Inject()(val messagesApi: MessagesApi) extends Play
         "cymraeg" -> Welsh,
         "español" -> Spanish)
 
-      val html = views.html.language_selection.render(mockLanguageMap, langToUrl(_), None,"", Spanish)
+      val html = views.html.language_selection.render(mockLanguageMap, langToUrl(_), None, "", Spanish)
       contentType(html) must be("text/html")
       contentAsString(html) must include("Español")
       contentAsString(html) must not include ">Español<"
