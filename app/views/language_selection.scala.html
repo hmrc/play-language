@@ -2,7 +2,7 @@
 @import play.api.i18n.Messages.Implicits._
 @import uk.gov.hmrc.urls.Link
 
-@(langMap  : Map[String, Lang], langToCall : (String => Call), customClass: Option[String] = None, appName: String = "")(implicit lang: Lang)
+@(langMap  : Map[String, Lang], langToCall : (String => Call), customClass: Option[String] = None, appName: Option[String] = None)(implicit lang: Lang)
 
 <p class="@if(customClass.isDefined) {@customClass.get}">
     @langMap.map { case (key: String, value: Lang) =>
@@ -11,7 +11,7 @@
                     id      = Some(s"$key-switch"),
                     url     = s"${langToCall(key)}",
                     value   = Some(key.capitalize),
-                    dataAttributes = Some(Map("journey-click" -> s"${appName}:language: ${value.code}"))
+                    dataAttributes = Some(Map("journey-click" -> s"${appName.fold("")(a=>a)}:language: ${value.code}"))
                 ).toHtml
             } else {
                @key.capitalize
