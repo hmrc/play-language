@@ -69,13 +69,13 @@ class LanguageSelectionSpec @Inject()(val messagesApi: MessagesApi) extends Play
     }
 
     "show a data-journey-click attribute for GA if it is set and language is Welsh" in running(new FakeApplication) {
-      val html = views.html.language_selection.render(languageMap, langToUrl(_), None, Some("appName:language: cy-GB"), Welsh)
+      val html = views.html.language_selection.render(languageMap, langToUrl(_), None, Some("appName"), Welsh)
       contentType(html) must be("text/html")
       contentAsString(html) must include("data-journey-click=\"appName:language: cy-GB\"")
     }
 
     "show a data-journey-click attribute for GA if it is set and language is English" in running(new FakeApplication) {
-      val html = views.html.language_selection.render(languageMap, langToUrl(_), None, Some("appName:language: en"), English)
+      val html = views.html.language_selection.render(languageMap, langToUrl(_), None, Some("appName"), English)
       contentType(html) must be("text/html")
       contentAsString(html) must include("data-journey-click=\"appName:language: en\"")
     }
