@@ -18,7 +18,6 @@ import org.joda.time.{DateTime, LocalDate}
 import org.scalatest.{FlatSpec, Matchers}
 import org.scalatestplus.play.OneAppPerSuite
 import play.api.i18n.{Lang, Messages, MessagesApi}
-import uk.gov.hmrc.play.language.LanguageUtils._
 import uk.gov.hmrc.play.language.LanguageUtils.Dates._
 
 class LanguageUtilsSpec extends FlatSpec with Matchers with OneAppPerSuite {
@@ -28,7 +27,7 @@ class LanguageUtilsSpec extends FlatSpec with Matchers with OneAppPerSuite {
   val messagesWelsh = new Messages(new Lang("cy"), messagesApi)
   val messagesSpanish = new Messages(new Lang("es"), messagesApi)
 
-  val date = new LocalDate(2015,1,25)
+  val date = new LocalDate(2015, 1, 25)
   val dateAndTime = new DateTime(2015, 1, 25, 3, 45)
 
   "Method formatDate(date: LocalDate)" should "return correctly formatted date in both English and Welsh" in {
@@ -45,8 +44,8 @@ class LanguageUtilsSpec extends FlatSpec with Matchers with OneAppPerSuite {
   }
 
   "Method formatDate(date: Option[LocalDate], default: String)" should "return correctly formatted date in both English and Welsh" in {
-    formatDate(Some(date),"n/a")(messagesEnglish) shouldBe "25 January 2015"
-    formatDate(Some(date),"n/a")(messagesWelsh) shouldBe "25 Ionawr 2015"
+    formatDate(Some(date), "n/a")(messagesEnglish) shouldBe "25 January 2015"
+    formatDate(Some(date), "n/a")(messagesWelsh) shouldBe "25 Ionawr 2015"
   }
 
   "Method formatDateAbbrMonth" should "return correctly formatted date in both English and Welsh" in {
@@ -60,7 +59,7 @@ class LanguageUtilsSpec extends FlatSpec with Matchers with OneAppPerSuite {
   }
 
   "Method formatDate(date: Option[LocalDate], default: String)" should "return a default if None was passed as date" in {
-    formatDate(None,"some_default")(messagesEnglish) shouldBe "some_default"
+    formatDate(None, "some_default")(messagesEnglish) shouldBe "some_default"
   }
 
   "Method formatEasyReadingTimeStamp" should "return correctly formatted date and time in both English and Welsh" in {

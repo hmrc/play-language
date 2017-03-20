@@ -16,12 +16,9 @@
 
 package views
 
-import javax.inject.Inject
-
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
-import play.api.i18n.{I18nSupport, Lang, Messages, MessagesApi}
+import play.api.i18n.{Lang, Messages, MessagesApi}
 import play.api.mvc.{Call, PathBindable}
-import play.api.test.FakeApplication
 import play.api.test.Helpers._
 import uk.gov.hmrc.play.language.LanguageUtils.{English, Welsh}
 
@@ -46,7 +43,7 @@ class LanguageSelectionSpec extends PlaySpec with OneAppPerSuite {
       contentAsString(html) must include("/language/cymraeg")
     }
 
-    "show correct current language message when current language is English" in  {
+    "show correct current language message when current language is English" in {
       val html = views.html.language_selection.render(languageMap, langToUrl(_), None, None, messagesEnglish)
       contentType(html) must be("text/html")
       contentAsString(html) must include("English")
@@ -60,7 +57,7 @@ class LanguageSelectionSpec extends PlaySpec with OneAppPerSuite {
       contentAsString(html) must include("/language/english")
     }
 
-    "show correct current language message when current language is Welsh" in  {
+    "show correct current language message when current language is Welsh" in {
       val html = views.html.language_selection.render(languageMap, langToUrl(_), None, None, messagesWelsh)
       contentType(html) must be("text/html")
       contentAsString(html) must include("Cymraeg")
