@@ -127,6 +127,11 @@ When you want to show a language switch to the user, use the language selection 
 
 In order to show each language text to the user, create a `messages.xx` file within `/conf`, where xx is the language code, and put your translations within there, using the same message keys.
 
+There is also a feature toggle for the language switcher. If you wish to disable this feature, add the following to your application.conf file:
+
+```
+microservice.services.features.welsh-translation=false
+```
 
 ## License ##
  
