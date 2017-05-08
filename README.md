@@ -98,7 +98,7 @@ class CustomLanguageController @Inject()(implicit val messagesApi: MessagesApi) 
 Add the following to the application conf file for each language you support:
 
 ```
-application.langs="en,cy"
+play.i18n.langs = ["en", "cy"]
 ```
 
 Add the following to your application's custom routes file.
