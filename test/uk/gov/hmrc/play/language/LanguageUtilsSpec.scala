@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 HM Revenue & Customs
+ * Copyright 2019 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,18 +14,22 @@
  * limitations under the License.
  */
 
+package uk.gov.hmrc.play.language
+
+import java.util.Locale
+
 import org.joda.time.{DateTime, LocalDate}
 import org.scalatest.{FlatSpec, Matchers}
-import org.scalatestplus.play.OneAppPerSuite
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.i18n.{Lang, Messages, MessagesApi}
 import uk.gov.hmrc.play.language.LanguageUtils.Dates._
 
-class LanguageUtilsSpec extends FlatSpec with Matchers with OneAppPerSuite {
+class LanguageUtilsSpec extends FlatSpec with Matchers with GuiceOneAppPerSuite {
 
-  val messagesApi = app.injector.instanceOf[MessagesApi]
-  val messagesEnglish = new Messages(new Lang("en"), messagesApi)
-  val messagesWelsh = new Messages(new Lang("cy"), messagesApi)
-  val messagesSpanish = new Messages(new Lang("es"), messagesApi)
+  val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
+  val messagesEnglish: Messages = Messages(Lang(new Locale("en")), messagesApi)
+  val messagesWelsh: Messages = Messages(Lang(new Locale("cy")), messagesApi)
+  val messagesSpanish: Messages = Messages(Lang(new Locale("es")), messagesApi)
 
   val date = new LocalDate(2015, 1, 25)
   val dateAndTime = new DateTime(2015, 1, 25, 3, 45)
@@ -64,7 +68,7 @@ class LanguageUtilsSpec extends FlatSpec with Matchers with OneAppPerSuite {
 
   "Method formatEasyReadingTimeStamp" should "return correctly formatted date and time in both English and Welsh" in {
     formatEasyReadingTimestamp(Some(dateAndTime), "default value")(messagesEnglish) shouldBe "3:45am, Sunday 25 January 2015"
-    formatEasyReadingTimestamp(Some(dateAndTime), "default value")(messagesWelsh) shouldBe "3:45am, Dydd Sul 25 Ionawr 2015"
+    formatEasyReadingTimestamp(Some(dateAndTime), "default value")(messagesWelsh) shouldBe "3:45yb, Dydd Sul 25 Ionawr 2015"
   }
 
   "Method formatEasyReadingTimeStamp" should "return a default value if None was passed as dateTime" in {

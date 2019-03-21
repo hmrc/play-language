@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 HM Revenue & Customs
+ * Copyright 2019 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -70,15 +70,14 @@ object LanguageUtils {
     * support for Welsh and English dates.
     */
   object Dates extends Dates {
-    import play.api.Play.current
 
-    override def defaultTimeZone = TimeZone.getTimeZone("Europe/London")
+    override def defaultTimeZone: TimeZone = TimeZone.getTimeZone("Europe/London")
 
-    override def to(implicit messages:Messages) = messages("language.to")
+    override def to(implicit messages:Messages): String = messages("language.to")
 
-    override def singular(implicit messages:Messages) = messages("language.day.singular")
+    override def singular(implicit messages:Messages): String = messages("language.day.singular")
 
-    override def plural(implicit messages:Messages) = messages("language.day.plural")
+    override def plural(implicit messages:Messages): String = messages("language.day.plural")
   }
 
   /**
@@ -131,9 +130,9 @@ object LanguageUtils {
       * @return - The SimpleDateFormat configured using the current language and pattern.
       */
     private def createDateFormatForPattern(pattern: String)(implicit messages: Messages): SimpleDateFormat = {
-      val langCode: String = messages.lang.code
-      val validLang: Boolean = ULocale.getAvailableLocales.contains(new ULocale(langCode))
-      val locale: ULocale = if (validLang) new ULocale((langCode)) else ULocale.getDefault
+      val uLocale = new ULocale(messages.lang.code)
+      val validLang: Boolean = ULocale.getAvailableLocales.contains(uLocale)
+      val locale: ULocale = if (validLang) uLocale else ULocale.getDefault
       val sdf = new SimpleDateFormat(pattern, locale)
       sdf.setTimeZone(defaultTimeZone)
       sdf
@@ -189,7 +188,7 @@ object LanguageUtils {
       * @param messages The implicit lang object.
       * @return The date as a "D MMM Y" formatted string.
       */
-    def formatDateAbbrMonth(date: LocalDate)(implicit messages:Messages) = dateFormatAbbrMonth.format(date.toDate)
+    def formatDateAbbrMonth(date: LocalDate)(implicit messages:Messages): String = dateFormatAbbrMonth.format(date.toDate)
 
     /**
       * Converts an optional DateTime object into a human readable String with the format: "h:mmaa, EEEE d MMMM yyyy"
@@ -206,7 +205,7 @@ object LanguageUtils {
       * @param messages    The implicit lang object.
       * @return The date and time as a "h:mmaa, EEEE d MMMM yyyy" formatted string.
       */
-    def formatEasyReadingTimestamp(date: Option[DateTime], default: String)(implicit messages:Messages) =
+    def formatEasyReadingTimestamp(date: Option[DateTime], default: String)(implicit messages:Messages): String =
       date match {
         case Some(d) =>
           val time = easyReadingTimestampFormat.format(d.toDate).toLowerCase
@@ -228,7 +227,7 @@ object LanguageUtils {
       * @param messages - The implicit language object.
       * @return The date as a "yyyy-MM-dd" formatted string.
       */
-    def shortDate(date: LocalDate)(implicit messages:Messages) = shortDateFormat.format(date.toDate)
+    def shortDate(date: LocalDate)(implicit messages:Messages): String = shortDateFormat.format(date.toDate)
 
     /**
       * Converts two LocalDate objects into a human readable String to show a date range.
@@ -243,9 +242,8 @@ object LanguageUtils {
       * @param messages      The implicit lang value.
       * @return A string in the format of "D MMMM Y to D MMMM Y"
       */
-    def formatDateRange(startDate: LocalDate, endDate: LocalDate)(implicit messages:Messages) = {
+    def formatDateRange(startDate: LocalDate, endDate: LocalDate)(implicit messages:Messages): String =
       Seq(formatDate(startDate), to, formatDate(endDate)).mkString(" ")
-    }
 
     /**
       * Converts an Int into a string appended by 'days'.
@@ -261,7 +259,7 @@ object LanguageUtils {
       * @param messages         - The implicit language object.
       * @return A string denoting "x" days.
       */
-    def formatDays(numberOfDays: Int)(implicit messages:Messages) = {
+    def formatDays(numberOfDays: Int)(implicit messages:Messages): String = {
       val dayOrDays = if (numberOfDays == 1) singular else plural
       s"$numberOfDays $dayOrDays"
     }
