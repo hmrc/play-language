@@ -11,8 +11,8 @@ lazy val playLanguage = (project in file("."))
   .settings(
     majorVersion := 3,
     name := appName,
-    scalaVersion := "2.11.8",
-    crossScalaVersions := Seq("2.11.8"),
+    scalaVersion := "2.11.12",
+    crossScalaVersions := Seq("2.11.12"),
     libraryDependencies ++= AppDependencies.compile() ++ AppDependencies.test(),
     resolvers += Resolver.typesafeRepo("releases"),
     resolvers += Resolver.bintrayRepo("hmrc", "releases")

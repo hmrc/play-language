@@ -29,13 +29,11 @@ object AppDependencies {
     "com.ibm.icu" % "icu4j" % ibm4jVersion
   )
 
-  private val scalaTestVersion = "3.0.5"
   private val scalaTestPlusVersion = "2.0.0"
   private val pegdownVersion = "1.6.0"
   private val scope = "test"
 
   def test(): Seq[ModuleID] = Seq(
-    "org.scalatest" %% "scalatest" % scalaTestVersion % scope,
     "com.typesafe.play" %% "play-test" % PlayVersion.current % scope,
     "org.scalatestplus.play" %% "scalatestplus-play" % scalaTestPlusVersion % scope,
     "org.pegdown" % "pegdown" % pegdownVersion % scope
