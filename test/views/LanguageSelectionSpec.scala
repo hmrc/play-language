@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 HM Revenue & Customs
+ * Copyright 2019 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,18 +16,21 @@
 
 package views
 
-import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
+import java.util.Locale
+
+import org.scalatestplus.play.PlaySpec
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.i18n.{Lang, Messages, MessagesApi}
 import play.api.mvc.{Call, PathBindable}
 import play.api.test.Helpers._
 import uk.gov.hmrc.play.language.LanguageUtils.{English, Welsh}
 
-class LanguageSelectionSpec extends PlaySpec with OneAppPerSuite {
+class LanguageSelectionSpec extends PlaySpec with GuiceOneAppPerSuite {
 
-  val messagesApi = app.injector.instanceOf[MessagesApi]
-  val messagesEnglish = new Messages(new Lang("en"), messagesApi)
-  val messagesWelsh = new Messages(new Lang("cy"), messagesApi)
-  val messagesSpanish = new Messages(new Lang("es"), messagesApi)
+  val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
+  val messagesEnglish: Messages = Messages(Lang(new Locale("en")), messagesApi)
+  val messagesWelsh: Messages = Messages(Lang(new Locale("cy")), messagesApi)
+  val messagesSpanish: Messages = Messages(Lang(new Locale("es")), messagesApi)
 
   def languageMap: Map[String, Lang] = Map("english" -> English,
     "cymraeg" -> Welsh)
@@ -37,47 +40,47 @@ class LanguageSelectionSpec extends PlaySpec with OneAppPerSuite {
   "Language selection template view" should {
 
     "give a link to switch to Welsh when current language is English" in {
-      val html = views.html.language_selection.render(languageMap, langToUrl(_), None, None, messagesEnglish)
+      val html = views.html.language_selection.render(languageMap, langToUrl, None, None, messagesEnglish)
       contentType(html) must be("text/html")
       contentAsString(html) must include(messagesEnglish("id=\"cymraeg-switch\""))
       contentAsString(html) must include("/language/cymraeg")
     }
 
     "show correct current language message when current language is English" in {
-      val html = views.html.language_selection.render(languageMap, langToUrl(_), None, None, messagesEnglish)
+      val html = views.html.language_selection.render(languageMap, langToUrl, None, None, messagesEnglish)
       contentType(html) must be("text/html")
       contentAsString(html) must include("English")
       contentAsString(html) must not include ">English<"
     }
 
     "give a link to switch to English when current language is Welsh" in {
-      val html = views.html.language_selection.render(languageMap, langToUrl(_), None, None, messagesWelsh)
+      val html = views.html.language_selection.render(languageMap, langToUrl, None, None, messagesWelsh)
       contentType(html) must be("text/html")
       contentAsString(html) must include(messagesEnglish("id=\"english-switch\""))
       contentAsString(html) must include("/language/english")
     }
 
     "show correct current language message when current language is Welsh" in {
-      val html = views.html.language_selection.render(languageMap, langToUrl(_), None, None, messagesWelsh)
+      val html = views.html.language_selection.render(languageMap, langToUrl, None, None, messagesWelsh)
       contentType(html) must be("text/html")
       contentAsString(html) must include("Cymraeg")
       contentAsString(html) must not include ">Cymraeg<"
     }
 
     "show a custom class if it is set" in {
-      val html = views.html.language_selection.render(languageMap, langToUrl(_), Some("float--right"), None, messagesWelsh)
+      val html = views.html.language_selection.render(languageMap, langToUrl, Some("float--right"), None, messagesWelsh)
       contentType(html) must be("text/html")
       contentAsString(html) must include("class=\"float--right\"")
     }
 
     "show a data-journey-click attribute for GA if it is set and language is Welsh" in {
-      val html = views.html.language_selection.render(languageMap, langToUrl(_), None, Some("appName"), messagesWelsh)
+      val html = views.html.language_selection.render(languageMap, langToUrl, None, Some("appName"), messagesWelsh)
       contentType(html) must be("text/html")
       contentAsString(html) must include("data-journey-click=\"appName:language: en\"")
     }
 
     "show a data-journey-click attribute for GA if it is set and language is English" in {
-      val html = views.html.language_selection.render(languageMap, langToUrl(_), None, Some("appName"), messagesEnglish)
+      val html = views.html.language_selection.render(languageMap, langToUrl, None, Some("appName"), messagesEnglish)
       contentType(html) must be("text/html")
       contentAsString(html) must include("data-journey-click=\"appName:language: cy\"")
     }
@@ -89,7 +92,7 @@ class LanguageSelectionSpec extends PlaySpec with OneAppPerSuite {
         "cymraeg" -> Welsh,
         "español" -> Spanish)
 
-      val html = views.html.language_selection.render(mockLanguageMap, langToUrl(_), None, None, messagesSpanish)
+      val html = views.html.language_selection.render(mockLanguageMap, langToUrl, None, None, messagesSpanish)
       contentType(html) must be("text/html")
       contentAsString(html) must include("Español")
       contentAsString(html) must not include ">Español<"
