@@ -17,10 +17,15 @@
 package uk.gov.hmrc.play.language
 
 import javax.inject.Inject
-
 import play.api.Application
 import play.api.i18n.{I18nSupport, Lang, MessagesApi}
 import play.api.mvc._
+import uk.gov.hmrc.play.frontend.binders.RedirectUrlPolicy.Id
+import uk.gov.hmrc.play.frontend.binders.{OnlyRelative, RedirectUrl, RedirectUrlPolicy}
+import uk.gov.hmrc.play.frontend.binders.RedirectUrl._
+import uk.gov.hmrc.play.frontend.controller.UnauthorisedAction
+
+import scala.concurrent.Future
 
 /**
   * LanguageController that switches the language of the current web application.
@@ -55,14 +60,18 @@ abstract class LanguageController @Inject()(implicit val messagesApi: MessagesAp
     * @return Redirect to referrer or fallbackURL, with new language. Or fallbackURL with default lang.
     */
 
-  def switchToLanguage(language: String): Action[AnyContent] = Action { implicit request =>
-    val enabled = isWelshEnabled
-    val lang =
-      if (enabled) languageMap.getOrElse(language, LanguageUtils.getCurrentLang)
-      else Lang("en")
-    val redirectURL = request.headers.get(REFERER).getOrElse(fallbackURL)
 
-    Redirect(redirectURL).withLang(Lang.apply(lang.code)).flashing(LanguageUtils.FlashWithSwitchIndicator)
+  private val policy: RedirectUrlPolicy[Id] = OnlyRelative
+
+  def switchToLanguage(redirectUrl: RedirectUrl, language: String): Action[AnyContent] = UnauthorisedAction.async {
+    request =>
+      val enabled = isWelshEnabled
+      val lang =
+        if (enabled) languageMap.getOrElse(language, LanguageUtils.getCurrentLang(request))
+        else Lang("en")
+
+      Future.successful(Redirect(redirectUrl.get(policy).url).withLang(Lang.apply(lang.code)).flashing(LanguageUtils.FlashWithSwitchIndicator))
+
   }
 
   private def isWelshEnabled = {

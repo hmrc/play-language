@@ -24,6 +24,7 @@ import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.Cookie
 import play.api.test.Helpers._
 import play.api.test._
+import uk.gov.hmrc.play.frontend.binders.RedirectUrl
 import uk.gov.hmrc.play.language.LanguageUtils._
 
 class TestLanguageController extends LanguageController {
@@ -35,16 +36,28 @@ class TestLanguageController extends LanguageController {
 
 class LanguageControllerSpec extends PlaySpec with PlayRunners {
 
-  private val refererValue = "http://gov.uk"
-  private val fallbackValue = "http://gov.uk/fallback"
+  private val refererValue = "/gov.uk"
+  private val fallbackValue = "/fallback"
 
   "The switch language endpoint" should {
+
+    "change to welsh when language is set to Welsh" in {
+      running() {
+        app =>
+          val sut = app.injector.instanceOf[TestLanguageController]
+          val res = sut.switchToLanguage(RedirectUrl("/dave"), "cymraeg")(FakeRequest())
+          cookies(res).get(Play.langCookieName) match {
+            case Some(c: Cookie) => c.value.mustBe(WelshLangCode)
+            case _ => fail("PLAY_LANG cookie was not cy")
+          }
+      }
+    }
 
     "not change to welsh with feature flag is set to false" in {
       val build = new GuiceApplicationBuilder().configure(Map("microservice.services.features.welsh-translation" -> false)).build()
       running(build) {
         val sut = build.injector.instanceOf[TestLanguageController]
-        val res = sut.switchToLanguage("cymraeg")(FakeRequest())
+        val res = sut.switchToLanguage(RedirectUrl("/fallback"),"cymraeg")(FakeRequest())
         cookies(res).get(Play.langCookieName) match {
           case Some(c: Cookie) => c.value must be(EnglishLangCode)
           case _ => fail("PLAY_LANG cookie was not found.")
@@ -56,7 +69,7 @@ class LanguageControllerSpec extends PlaySpec with PlayRunners {
       running() { app =>
         val sut = app.injector.instanceOf[TestLanguageController]
         val request = FakeRequest().withHeaders(REFERER -> refererValue)
-        val res = sut.switchToLanguage("english")(request)
+        val res = sut.switchToLanguage(RedirectUrl("/fallback"),"english")(request)
         status(res) must be(SEE_OTHER)
       }
     }
@@ -64,7 +77,7 @@ class LanguageControllerSpec extends PlaySpec with PlayRunners {
     "respond with a See Other (303) status when no referrer is in the header." in {
       running() { app =>
         val sut = app.injector.instanceOf[TestLanguageController]
-        val res = sut.switchToLanguage("english")(FakeRequest())
+        val res = sut.switchToLanguage(RedirectUrl("/fallback"),"english")(FakeRequest())
         status(res) must be(SEE_OTHER)
       }
     }
@@ -73,7 +86,7 @@ class LanguageControllerSpec extends PlaySpec with PlayRunners {
       running() { app =>
         val sut = app.injector.instanceOf[TestLanguageController]
         val request = FakeRequest().withHeaders(REFERER -> refererValue)
-        val res = sut.switchToLanguage("english")(request)
+        val res = sut.switchToLanguage(RedirectUrl("/gov.uk"),"english")(request)
         redirectLocation(res) must be(Some(refererValue))
       }
     }
@@ -81,7 +94,7 @@ class LanguageControllerSpec extends PlaySpec with PlayRunners {
     "set the redirect location to the fallback value when no referrer is in the header." in {
       running() { app =>
         val sut = app.injector.instanceOf[TestLanguageController]
-        val res = sut.switchToLanguage("english")(FakeRequest())
+        val res = sut.switchToLanguage(RedirectUrl("/fallback"),"english")(FakeRequest())
         redirectLocation(res) must be(Some(fallbackValue))
       }
     }
@@ -89,7 +102,7 @@ class LanguageControllerSpec extends PlaySpec with PlayRunners {
     "set the language in a cookie." in {
       running() { app =>
         val sut = app.injector.instanceOf[TestLanguageController]
-        val res = sut.switchToLanguage("english")(FakeRequest())
+        val res = sut.switchToLanguage(RedirectUrl("/fallback"), "english")(FakeRequest())
         cookies(res).get(Play.langCookieName) match {
           case Some(c: Cookie) => c.value must be(EnglishLangCode)
           case _ => fail("PLAY_LANG cookie was not found.")
