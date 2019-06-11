@@ -61,18 +61,18 @@ abstract class LanguageController @Inject()(implicit val messagesApi: MessagesAp
     */
 
 
-  private val policy: RedirectUrlPolicy[Id] = OnlyRelative
+  val policy: RedirectUrlPolicy[Id] = OnlyRelative
 
-  def switchToLanguage(redirectUrl: RedirectUrl, language: String): Action[AnyContent] = UnauthorisedAction.async {
-    request =>
-      val enabled = isWelshEnabled
-      val lang =
-        if (enabled) languageMap.getOrElse(language, LanguageUtils.getCurrentLang(request))
-        else Lang("en")
+  def switchToLanguage(language: String): Action[AnyContent] = Action { implicit request =>
+    val enabled = isWelshEnabled
+    val lang =
+      if (enabled) languageMap.getOrElse(language, LanguageUtils.getCurrentLang)
+      else Lang("en")
+    val redirectURL = request.headers.get(REFERER).map(RedirectUrl(_).get(policy).url).getOrElse(fallbackURL)
 
-      Future.successful(Redirect(redirectUrl.get(policy).url).withLang(Lang.apply(lang.code)).flashing(LanguageUtils.FlashWithSwitchIndicator))
-
+    Redirect(redirectURL).withLang(Lang.apply(lang.code)).flashing(LanguageUtils.FlashWithSwitchIndicator)
   }
+
 
   private def isWelshEnabled = {
     application.configuration.getBoolean("microservice.services.features.welsh-translation").getOrElse(true)
