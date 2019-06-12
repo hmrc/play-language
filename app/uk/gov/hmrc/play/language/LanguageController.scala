@@ -17,10 +17,14 @@
 package uk.gov.hmrc.play.language
 
 import javax.inject.Inject
-
-import play.api.Application
+import play.api.{Application, Environment}
 import play.api.i18n.{I18nSupport, Lang, MessagesApi}
 import play.api.mvc._
+import uk.gov.hmrc.play.bootstrap.binders.{OnlyRelative, PermitAllOnDev, RedirectUrl, RedirectUrlPolicy}
+import uk.gov.hmrc.play.bootstrap.binders.RedirectUrlPolicy.Id
+import uk.gov.hmrc.play.bootstrap.binders.RedirectUrl._
+
+import scala.concurrent.Future
 
 /**
   * LanguageController that switches the language of the current web application.
@@ -30,13 +34,16 @@ import play.api.mvc._
   * It also expects a languageMap to be defined, this provides a way of mapping strings to Lang objects.
   *
   */
-abstract class LanguageController @Inject()(implicit val messagesApi: MessagesApi, application: Application) extends Controller with I18nSupport {
+abstract class LanguageController @Inject()(implicit val messagesApi: MessagesApi, application: Application, environment: Environment) extends Controller with I18nSupport {
 
   /** A URL to fallback to if there is no referrer found in the request header **/
   protected def fallbackURL: String
 
   /** A map from a String to Lang object **/
   protected def languageMap: Map[String, Lang]
+
+  /** The URL policy applied to the referer header value. This can be overridden **/
+  val policy: RedirectUrlPolicy[Id] = OnlyRelative | PermitAllOnDev(environment)
 
   /**
     * A public interface to switch to a new language.
@@ -45,14 +52,15 @@ abstract class LanguageController @Inject()(implicit val messagesApi: MessagesAp
     *
     * This function expects a language string as a parameter and will use this to switch
     * the current application language. This function expects a referrer value within
-    * the request header, and will redirect the user back to that value. If it is not
-    * set then the redirect will be to the fallbackURL.
+    * the request header which must match the configured RedirectUrlPolicy, and will redirect the user
+    * back to that value if it matches. If it is not set then the redirect will be to the fallbackURL.
     *
     * The returned Redirect object will also contain a flashing parameter which can be
     * detected by controllers in order to show different behaviour if wanted.
     *
     * @param language - The language string to switch to.
     * @return Redirect to referrer or fallbackURL, with new language. Or fallbackURL with default lang.
+    *
     */
 
   def switchToLanguage(language: String): Action[AnyContent] = Action { implicit request =>
@@ -60,10 +68,10 @@ abstract class LanguageController @Inject()(implicit val messagesApi: MessagesAp
     val lang =
       if (enabled) languageMap.getOrElse(language, LanguageUtils.getCurrentLang)
       else Lang("en")
-    val redirectURL = request.headers.get(REFERER).getOrElse(fallbackURL)
-
+    val redirectURL = request.headers.get(REFERER).map(RedirectUrl(_).get(policy).url).getOrElse(fallbackURL)
     Redirect(redirectURL).withLang(Lang.apply(lang.code)).flashing(LanguageUtils.FlashWithSwitchIndicator)
   }
+
 
   private def isWelshEnabled = {
     application.configuration.getBoolean("microservice.services.features.welsh-translation").getOrElse(true)

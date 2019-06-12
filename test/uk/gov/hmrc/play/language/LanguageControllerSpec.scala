@@ -16,17 +16,22 @@
 
 package uk.gov.hmrc.play.language
 
+import com.google.inject.Inject
 import org.scalatestplus.play.PlaySpec
-import play.api.Play
+import play.api.{Environment, Mode, Play}
 import play.api.Play.current
 import play.api.i18n.Messages.Implicits._
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.Cookie
 import play.api.test.Helpers._
 import play.api.test._
+import uk.gov.hmrc.play.bootstrap.binders.RedirectUrl._
 import uk.gov.hmrc.play.language.LanguageUtils._
+import play.api.Environment._
 
-class TestLanguageController extends LanguageController {
+
+
+class TestLanguageController @Inject()(implicit environment: Environment) extends LanguageController {
 
   override protected def fallbackURL = "http://gov.uk/fallback"
 
@@ -35,10 +40,22 @@ class TestLanguageController extends LanguageController {
 
 class LanguageControllerSpec extends PlaySpec with PlayRunners {
 
-  private val refererValue = "http://gov.uk"
+  private val refererValue = "/gov.uk"
   private val fallbackValue = "http://gov.uk/fallback"
 
   "The switch language endpoint" should {
+
+    "change to welsh when language is set to Welsh" in {
+      running() {
+        app =>
+          val sut = app.injector.instanceOf[TestLanguageController]
+          val res = sut.switchToLanguage("cymraeg")(FakeRequest())
+          cookies(res).get(Play.langCookieName) match {
+            case Some(c: Cookie) => c.value.mustBe(WelshLangCode)
+            case _ => fail("PLAY_LANG cookie was not cy")
+          }
+      }
+    }
 
     "not change to welsh with feature flag is set to false" in {
       val build = new GuiceApplicationBuilder().configure(Map("microservice.services.features.welsh-translation" -> false)).build()
