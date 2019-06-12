@@ -20,10 +20,9 @@ import javax.inject.Inject
 import play.api.{Application, Environment}
 import play.api.i18n.{I18nSupport, Lang, MessagesApi}
 import play.api.mvc._
-import uk.gov.hmrc.play.frontend.binders.RedirectUrlPolicy.Id
-import uk.gov.hmrc.play.frontend.binders.{OnlyRelative, PermitAllOnDev, RedirectUrl, RedirectUrlPolicy}
-import uk.gov.hmrc.play.frontend.binders.RedirectUrl._
-import uk.gov.hmrc.play.frontend.controller.UnauthorisedAction
+import uk.gov.hmrc.play.bootstrap.binders.{OnlyRelative, PermitAllOnDev, RedirectUrl, RedirectUrlPolicy}
+import uk.gov.hmrc.play.bootstrap.binders.RedirectUrlPolicy.Id
+import uk.gov.hmrc.play.bootstrap.binders.RedirectUrl._
 
 import scala.concurrent.Future
 
@@ -43,6 +42,9 @@ abstract class LanguageController @Inject()(implicit val messagesApi: MessagesAp
   /** A map from a String to Lang object **/
   protected def languageMap: Map[String, Lang]
 
+/** Please note that the policy val below can be overriden to match the needs of the application **/
+
+  val policy: RedirectUrlPolicy[Id] = OnlyRelative | PermitAllOnDev(environment)
 
   /**
     * A public interface to switch to a new language.
@@ -59,10 +61,10 @@ abstract class LanguageController @Inject()(implicit val messagesApi: MessagesAp
     *
     * @param language - The language string to switch to.
     * @return Redirect to referrer or fallbackURL, with new language. Or fallbackURL with default lang.
+    *
+    * Please note that the URL in the request header must match the desired RedirectUrlPolicy.
+    *
     */
-
-
-  val policy: RedirectUrlPolicy[Id] = OnlyRelative | PermitAllOnDev(environment)
 
   def switchToLanguage(language: String): Action[AnyContent] = Action { implicit request =>
     val enabled = isWelshEnabled

@@ -25,9 +25,11 @@ import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.Cookie
 import play.api.test.Helpers._
 import play.api.test._
-import uk.gov.hmrc.play.frontend.binders.RedirectUrl
+import uk.gov.hmrc.play.bootstrap.binders.RedirectUrl._
 import uk.gov.hmrc.play.language.LanguageUtils._
 import play.api.Environment._
+
+
 
 class TestLanguageController @Inject()(implicit environment: Environment) extends LanguageController {
 
