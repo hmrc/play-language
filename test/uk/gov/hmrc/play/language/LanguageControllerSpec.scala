@@ -16,8 +16,9 @@
 
 package uk.gov.hmrc.play.language
 
+import com.google.inject.Inject
 import org.scalatestplus.play.PlaySpec
-import play.api.Play
+import play.api.{Environment, Mode, Play}
 import play.api.Play.current
 import play.api.i18n.Messages.Implicits._
 import play.api.inject.guice.GuiceApplicationBuilder
@@ -26,8 +27,9 @@ import play.api.test.Helpers._
 import play.api.test._
 import uk.gov.hmrc.play.frontend.binders.RedirectUrl
 import uk.gov.hmrc.play.language.LanguageUtils._
+import play.api.Environment._
 
-class TestLanguageController extends LanguageController {
+class TestLanguageController @Inject()(implicit environment: Environment) extends LanguageController {
 
   override protected def fallbackURL = "http://gov.uk/fallback"
 

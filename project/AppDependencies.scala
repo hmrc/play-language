@@ -22,7 +22,7 @@ object AppDependencies {
 
   private val urlBuilderVersion = "3.1.0"
   private val ibm4jVersion = "63.1"
-  private val frontendBootstrapVersion = "12.8.0"
+  private val frontendBootstrapVersion = "12.9.0"
 
   def compile(): Seq[ModuleID] = Seq(
     "com.typesafe.play" %% "play" % PlayVersion.current % "provided",

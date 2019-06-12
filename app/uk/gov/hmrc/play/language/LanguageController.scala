@@ -17,11 +17,11 @@
 package uk.gov.hmrc.play.language
 
 import javax.inject.Inject
-import play.api.Application
+import play.api.{Application, Environment}
 import play.api.i18n.{I18nSupport, Lang, MessagesApi}
 import play.api.mvc._
 import uk.gov.hmrc.play.frontend.binders.RedirectUrlPolicy.Id
-import uk.gov.hmrc.play.frontend.binders.{OnlyRelative, RedirectUrl, RedirectUrlPolicy}
+import uk.gov.hmrc.play.frontend.binders.{OnlyRelative, PermitAllOnDev, RedirectUrl, RedirectUrlPolicy}
 import uk.gov.hmrc.play.frontend.binders.RedirectUrl._
 import uk.gov.hmrc.play.frontend.controller.UnauthorisedAction
 
@@ -35,13 +35,14 @@ import scala.concurrent.Future
   * It also expects a languageMap to be defined, this provides a way of mapping strings to Lang objects.
   *
   */
-abstract class LanguageController @Inject()(implicit val messagesApi: MessagesApi, application: Application) extends Controller with I18nSupport {
+abstract class LanguageController @Inject()(implicit val messagesApi: MessagesApi, application: Application, environment: Environment) extends Controller with I18nSupport {
 
   /** A URL to fallback to if there is no referrer found in the request header **/
   protected def fallbackURL: String
 
   /** A map from a String to Lang object **/
   protected def languageMap: Map[String, Lang]
+
 
   /**
     * A public interface to switch to a new language.
@@ -61,7 +62,7 @@ abstract class LanguageController @Inject()(implicit val messagesApi: MessagesAp
     */
 
 
-  val policy: RedirectUrlPolicy[Id] = OnlyRelative
+  val policy: RedirectUrlPolicy[Id] = OnlyRelative | PermitAllOnDev(environment)
 
   def switchToLanguage(language: String): Action[AnyContent] = Action { implicit request =>
     val enabled = isWelshEnabled
@@ -69,7 +70,6 @@ abstract class LanguageController @Inject()(implicit val messagesApi: MessagesAp
       if (enabled) languageMap.getOrElse(language, LanguageUtils.getCurrentLang)
       else Lang("en")
     val redirectURL = request.headers.get(REFERER).map(RedirectUrl(_).get(policy).url).getOrElse(fallbackURL)
-
     Redirect(redirectURL).withLang(Lang.apply(lang.code)).flashing(LanguageUtils.FlashWithSwitchIndicator)
   }
 
