@@ -22,13 +22,13 @@ object AppDependencies {
 
   private val urlBuilderVersion = "3.1.0"
   private val ibm4jVersion = "63.1"
-  private val bootstrapPlay25 = "4.13.0"
+  private val bootstrapPlay25Version = "4.13.0"
 
   def compile(): Seq[ModuleID] = Seq(
     "com.typesafe.play" %% "play" % PlayVersion.current % "provided",
     "uk.gov.hmrc" %% "url-builder" % urlBuilderVersion,
     "com.ibm.icu" % "icu4j" % ibm4jVersion,
-    "uk.gov.hmrc" %% "bootstrap-play-25" % bootstrapPlay25
+    "uk.gov.hmrc" %% "bootstrap-play-25" % bootstrapPlay25Version
   )
 
   private val scalaTestPlusVersion = "2.0.0"

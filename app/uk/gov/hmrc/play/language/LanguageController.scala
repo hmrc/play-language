@@ -42,8 +42,7 @@ abstract class LanguageController @Inject()(implicit val messagesApi: MessagesAp
   /** A map from a String to Lang object **/
   protected def languageMap: Map[String, Lang]
 
-/** Please note that the policy val below can be overriden to match the needs of the application **/
-
+  /** The URL policy applied to the referer header value. This can be overridden **/
   val policy: RedirectUrlPolicy[Id] = OnlyRelative | PermitAllOnDev(environment)
 
   /**
@@ -53,16 +52,14 @@ abstract class LanguageController @Inject()(implicit val messagesApi: MessagesAp
     *
     * This function expects a language string as a parameter and will use this to switch
     * the current application language. This function expects a referrer value within
-    * the request header, and will redirect the user back to that value. If it is not
-    * set then the redirect will be to the fallbackURL.
+    * the request header which must match the configured RedirectUrlPolicy, and will redirect the user
+    * back to that value if it matches. If it is not set then the redirect will be to the fallbackURL.
     *
     * The returned Redirect object will also contain a flashing parameter which can be
     * detected by controllers in order to show different behaviour if wanted.
     *
     * @param language - The language string to switch to.
     * @return Redirect to referrer or fallbackURL, with new language. Or fallbackURL with default lang.
-    *
-    * Please note that the URL in the request header must match the desired RedirectUrlPolicy.
     *
     */
 
