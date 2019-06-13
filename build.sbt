@@ -3,11 +3,13 @@ import sbt.Keys._
 import sbt._
 import uk.gov.hmrc.versioning.SbtGitVersioning
 import uk.gov.hmrc.versioning.SbtGitVersioning.autoImport.majorVersion
+import uk.gov.hmrc.SbtArtifactory
+
 
 val appName = "play-language"
 
 lazy val playLanguage = (project in file("."))
-  .enablePlugins(PlayScala, SbtAutoBuildPlugin, SbtGitVersioning)
+  .enablePlugins(PlayScala, SbtAutoBuildPlugin, SbtGitVersioning, SbtArtifactory)
   .settings(
     majorVersion := 3,
     name := appName,
