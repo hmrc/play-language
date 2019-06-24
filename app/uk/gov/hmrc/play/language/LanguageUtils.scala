@@ -18,9 +18,10 @@ package uk.gov.hmrc.play.language
 
 import com.ibm.icu.text.SimpleDateFormat
 import com.ibm.icu.util.{TimeZone, ULocale}
+import javax.inject.Inject
 import org.joda.time.{DateTime, LocalDate}
-import play.api.Play
-import play.api.i18n.{Lang, Messages}
+import play.api.{Configuration, Play}
+import play.api.i18n.{Lang, Langs, Messages, MessagesApi}
 import play.api.mvc._
 
 /** This object provides access to common language utilities.
@@ -33,18 +34,10 @@ import play.api.mvc._
   * and Welsh.
   *
   */
-object LanguageUtils {
-
-  import play.api.i18n.Messages.Implicits._
-
-  val EnglishLangCode = "en"
-  val WelshLangCode = "cy"
-
-  val English = Lang(EnglishLangCode)
-  val Welsh = Lang(WelshLangCode)
-
-  val SwitchIndicatorKey = "switching-language"
-  val FlashWithSwitchIndicator = Flash(Map(SwitchIndicatorKey -> "true"))
+class LanguageUtils @Inject()(
+                               langs: Langs,
+                               configuration: Configuration
+                             )(implicit messagesApi: MessagesApi) {
 
   /** Returns the current language as a Lang object.
     *
@@ -58,10 +51,31 @@ object LanguageUtils {
     * @return Lang object containing the current langugage.
     */
   def getCurrentLang(implicit request: RequestHeader): Lang = {
-    Play.maybeApplication.map { implicit app =>
       val maybeLangFromCookie = request.cookies.get(Play.langCookieName).flatMap(c => Lang.get(c.value))
-      maybeLangFromCookie.getOrElse(Lang.preferred(request.acceptLanguages))
-    }.getOrElse(request.acceptLanguages.headOption.getOrElse(Lang.defaultLang))
+
+      maybeLangFromCookie.getOrElse(langs.preferred(request.acceptLanguages))
+  }
+
+  /** Returns true if the lang passed exists within `play.i18n.langs` config value
+    *
+    * @param lang The language to check against
+    * @return A boolean on wether this language is supported in the current application
+    */
+  def isLangAvailable(lang: Lang): Boolean = {
+    configuration.getStringSeq("play.i18n.langs").exists(_.contains(lang.code))
+  }
+
+  /** Filters a Map of languages against what languages are enabled in the current application
+    *
+    * This function returns a filtered Map containing only languages which are enabled in the `play.i18n.langs`
+    * configuration value. This function is to be used to dynamically populate which languages should be displayed
+    * on the applications language switcher.
+    *
+    * @param langMap List of all supported languages
+    * @return filtered list of enabled languages
+    */
+  def onlyAvailableLanguages(langMap: Map[String, Lang]): Map[String, Lang] = {
+    langMap.filter(t => isLangAvailable(t._2))
   }
 
   /** Helper object to correctly display and format dates in both English and Welsh.

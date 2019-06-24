@@ -18,27 +18,37 @@ package uk.gov.hmrc.play.language
 
 import com.google.inject.Inject
 import org.scalatestplus.play.PlaySpec
-import play.api.{Environment, Mode, Play}
-import play.api.Play.current
-import play.api.i18n.Messages.Implicits._
-import play.api.inject.guice.GuiceApplicationBuilder
+import play.api.i18n.{Lang, MessagesApi}
 import play.api.mvc.Cookie
 import play.api.test.Helpers._
 import play.api.test._
-import uk.gov.hmrc.play.bootstrap.binders.RedirectUrl._
-import uk.gov.hmrc.play.language.LanguageUtils._
-import play.api.Environment._
+import play.api.{Configuration, Play}
 
 
+class TestLanguageController @Inject()(
+                                        configuration: Configuration,
+                                        languageUtils: LanguageUtils,
+                                        val messagesApi: MessagesApi
+                                      ) extends LanguageController(configuration, languageUtils) {
 
-class TestLanguageController @Inject()(implicit environment: Environment) extends LanguageController {
+  val EnglishLangCode = "en"
+  val WelshLangCode = "cy"
+
+  val English: Lang = Lang(EnglishLangCode)
+  val Welsh: Lang = Lang(WelshLangCode)
 
   override protected def fallbackURL = "http://gov.uk/fallback"
 
-  override def languageMap = Map("english" -> English, "cymraeg" -> Welsh)
+  override def languageMap: Map[String, Lang] = Map("english" -> English, "cymraeg" -> Welsh)
 }
 
 class LanguageControllerSpec extends PlaySpec with PlayRunners {
+
+  val EnglishLangCode = "en"
+  val WelshLangCode = "cy"
+
+  val English: Lang = Lang(EnglishLangCode)
+  val Welsh: Lang = Lang(WelshLangCode)
 
   private val refererValue = "/gov.uk"
   private val fallbackValue = "http://gov.uk/fallback"
@@ -46,25 +56,13 @@ class LanguageControllerSpec extends PlaySpec with PlayRunners {
   "The switch language endpoint" should {
 
     "change to welsh when language is set to Welsh" in {
-      running() {
-        app =>
-          val sut = app.injector.instanceOf[TestLanguageController]
-          val res = sut.switchToLanguage("cymraeg")(FakeRequest())
-          cookies(res).get(Play.langCookieName) match {
-            case Some(c: Cookie) => c.value.mustBe(WelshLangCode)
-            case _ => fail("PLAY_LANG cookie was not cy")
-          }
-      }
-    }
-
-    "not change to welsh with feature flag is set to false" in {
-      val build = new GuiceApplicationBuilder().configure(Map("microservice.services.features.welsh-translation" -> false)).build()
-      running(build) {
-        val sut = build.injector.instanceOf[TestLanguageController]
+      running() { app =>
+        val sut = app.injector.instanceOf[TestLanguageController]
+        implicit val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
         val res = sut.switchToLanguage("cymraeg")(FakeRequest())
         cookies(res).get(Play.langCookieName) match {
-          case Some(c: Cookie) => c.value must be(EnglishLangCode)
-          case _ => fail("PLAY_LANG cookie was not found.")
+          case Some(c: Cookie) => c.value.mustBe(WelshLangCode)
+          case _ => fail("PLAY_LANG cookie was not cy")
         }
       }
     }
@@ -75,6 +73,7 @@ class LanguageControllerSpec extends PlaySpec with PlayRunners {
         val request = FakeRequest().withHeaders(REFERER -> refererValue)
         val res = sut.switchToLanguage("english")(request)
         status(res) must be(SEE_OTHER)
+        redirectLocation(res) must be(Some(refererValue))
       }
     }
 
@@ -83,22 +82,6 @@ class LanguageControllerSpec extends PlaySpec with PlayRunners {
         val sut = app.injector.instanceOf[TestLanguageController]
         val res = sut.switchToLanguage("english")(FakeRequest())
         status(res) must be(SEE_OTHER)
-      }
-    }
-
-    "set the redirect location to the value of the referrer header." in {
-      running() { app =>
-        val sut = app.injector.instanceOf[TestLanguageController]
-        val request = FakeRequest().withHeaders(REFERER -> refererValue)
-        val res = sut.switchToLanguage("english")(request)
-        redirectLocation(res) must be(Some(refererValue))
-      }
-    }
-
-    "set the redirect location to the fallback value when no referrer is in the header." in {
-      running() { app =>
-        val sut = app.injector.instanceOf[TestLanguageController]
-        val res = sut.switchToLanguage("english")(FakeRequest())
         redirectLocation(res) must be(Some(fallbackValue))
       }
     }
@@ -106,6 +89,7 @@ class LanguageControllerSpec extends PlaySpec with PlayRunners {
     "set the language in a cookie." in {
       running() { app =>
         val sut = app.injector.instanceOf[TestLanguageController]
+        implicit val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
         val res = sut.switchToLanguage("english")(FakeRequest())
         cookies(res).get(Play.langCookieName) match {
           case Some(c: Cookie) => c.value must be(EnglishLangCode)
