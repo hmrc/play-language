@@ -1,6 +1,3 @@
-## DO NOT USE VERSION 3.5 OF THIS LIBRARY - THERE ARE ISSUES
-
-
 # Play Language
 
 [![Apache-2.0 license](http://img.shields.io/badge/license-Apache-brightgreen.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
@@ -84,7 +81,7 @@ In your main template:
 ``` scala
 @views.html.language_selection(
             appConfig.languageMap,
-            appConfig.routeToSwithLanguage,
+            appConfig.routeToSwitchLanguage,
             Some("custom-class"))
 ```
 
@@ -117,8 +114,8 @@ Pass the following arguments to your template renderer
     "enUrl" -> controllers.routes.CustomLanguageController.switchToLanguage("english"),
     "cyUrl" -> controllers.routes.CustomLanguageController.switchToLanguage("cymraeg")
   )
-}
-"isWelsh" -> messages.lang.code == "cy"
+},
+"isWelsh" -> (messages.lang.code == "cy")
 
 ```
 
@@ -187,7 +184,7 @@ To show the language toggles, place this in your Twirl templates (typically insi
     @if(appConfig.languageTranslationEnabled) {
         @views.html.language_selection(
             appConfig.languageMap,
-            appConfig.routeToSwithLanguage,
+            appConfig.routeToSwitchLanguage,
             Some("custom-class"))
     }
 ```
