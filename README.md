@@ -1,6 +1,3 @@
-## DO NOT USE VERSION 3.5 OF THIS LIBRARY - THERE ARE ISSUES
-
-
 # Play Language
 
 [![Apache-2.0 license](http://img.shields.io/badge/license-Apache-brightgreen.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
@@ -26,48 +23,103 @@ resolvers += Resolver.bintrayRepo("hmrc", "releases")
 libraryDependencies += "uk.gov.hmrc" %% "play-language" % "[INSERT VERSION]"
 ```
 
-## Configuration - Play-2.3 (version 2.2.0)
+## Configuration - Play-2.5 (version 4.x.x)
 
-Create your own custom LanguageController:
+Create your own custom LanguageController
 
 ``` scala
-object CustomLanguageController extends LanguageController with RunMode {
+import com.google.inject.Inject
+import play.api.i18n.{MessagesApi, Lang}
+import play.api.Configuration
+import uk.gov.hmrc.play.language.{LanguageController, LanguageUtils}
+
+class CustomLanguageController @Inject()(
+                                        configuration: Configuration,
+                                        languageUtils: LanguageUtils,
+                                        val messagesApi: MessagesApi
+                                      ) extends LanguageController(configuration, languageUtils) {
   
-  /** Converts a string to a URL, using the route to this controller. **/
-  def langToCall(lang: String): Call = controllers.routes.CustomLanguageController.switchToLanguage(lang)
-
-  /** Provides a fallback URL if there is no referer in the request header. **/
-  override protected def fallbackURL: String = current.configuration.getString(s"$env.language.fallbackUrl").getOrElse("/")
-
-  /** Returns a mapping between strings and the corresponding Lang object. **/
-  override def languageMap: Map[String, Lang] = Map("english" -> Lang("en"),
-                                                    "cymraeg" -> Lang("cy-GB"))
+  //This can be from a configuration value. If you are using play-language's html, this should be from the configuration value set below
+  override def languageMap: Map[String, Lang] = Map(
+    "english" -> Lang("en"),
+    "cymraeg" -> Lang("cy")    
+  )
+  
+  override def fallbackURL: String = "https://www.gov.uk/fallback"                           
 }
 ```
+
+The language map sets the display language for the name in the selection html element mapped to the language code to use.
 
 Add the following to the application conf file for each language you support:
 
 ```
-application.langs="en,cy"
+play.i18n.langs = ["en", "cy"]
 ```
 
-Add the following to your application's custom routes file. 
+Add the following to your application's custom routes file.
 
 ```
-GET     /language/:lang       uk.gov.hmrc.project.CustomLanguageController.switchToLanguage(lang: String)
+GET     /language/:lang       uk.gov.hmrc.project.controllers.CustomLanguageController.switchToLanguage(lang: String)
 ```
 
-When you want to show a language switch to the user, use the language selection template.
+In order to show each language text to the user, create a `messages.xx` file within `/conf`, where xx is the language code, and put your translations within there, using the same message keys.
+
+
+#### Using play-language's `language_selection.scala.html`:
+Add the following to your AppConfig trait.
 
 ``` scala
-@language_selection(CustomLanguageController.languageMap, CustomLanguageController.langToCall, Some("custom-class"))
+  def languageMap: Map[String, Lang] = Map(
+    "english" -> Lang("en"),
+    "cymraeg" -> Lang("cy"))
+
+  def routeToSwitchLanguage = (lang: String) => routes.CustomLanguageController.switchToLanguage(lang)
 ```
 
-Add an implicit Lang object to each view you wish to support multiple languages.
+In your main template:
+``` scala
+@views.html.language_selection(
+            appConfig.languageMap,
+            appConfig.routeToSwitchLanguage,
+            Some("custom-class"))
+```
+
+If you wish to filter the languages displayed in your language selector to only display enabled languages, you can wrap you language Map in the LanguageUtils.onlyAvailableLanguages function.
+Example, in your AppConfig class:
 
 ``` scala
-@()(implicit lang: Lang)
+import javax.inject.Inject
+import uk.gov.hmrc.play.language.LanguageUtils
+
+class AppConfig @Inject()(languageUtils: LanguageUtils) {
+  def languageMap: Map[String, Lang] = languageUtils.onlyAvailableLanguages(
+    Map(
+      "english" -> Lang("en"),
+      "cymraeg" -> Lang("cy")
+    )
+  )
+
+  def routeToSwitchLanguage = (lang: String) => routes.CustomLanguageController.switchToLanguage(lang)
+}
+
 ```
+
+
+#### Using [govuk-template]("https://github.com/hmrc/govuk-template"):
+Pass the following arguments to your template renderer
+``` scala 
+"langSelector" -> {
+  Map(
+    "enUrl" -> controllers.routes.CustomLanguageController.switchToLanguage("english"),
+    "cyUrl" -> controllers.routes.CustomLanguageController.switchToLanguage("cymraeg")
+  )
+},
+"isWelsh" -> (messages.lang.code == "cy")
+
+```
+
+
 
 ## Configuration - Play-2.5 (version 3.0.0)
 
@@ -132,7 +184,7 @@ To show the language toggles, place this in your Twirl templates (typically insi
     @if(appConfig.languageTranslationEnabled) {
         @views.html.language_selection(
             appConfig.languageMap,
-            appConfig.routeToSwithLanguage,
+            appConfig.routeToSwitchLanguage,
             Some("custom-class"))
     }
 ```

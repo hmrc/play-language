@@ -11,11 +11,11 @@ val appName = "play-language"
 lazy val playLanguage = (project in file("."))
   .enablePlugins(PlayScala, SbtAutoBuildPlugin, SbtGitVersioning, SbtArtifactory)
   .settings(
-    majorVersion := 3,
+    majorVersion := 4,
     name := appName,
     scalaVersion := "2.11.12",
     crossScalaVersions := Seq("2.11.12"),
-    libraryDependencies ++= AppDependencies.compile() ++ AppDependencies.test(),
+    libraryDependencies ++= AppDependencies.all,
     resolvers += Resolver.typesafeRepo("releases"),
     resolvers += Resolver.bintrayRepo("hmrc", "releases")
   )

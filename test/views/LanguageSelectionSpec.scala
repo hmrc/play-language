@@ -23,7 +23,6 @@ import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.i18n.{Lang, Messages, MessagesApi}
 import play.api.mvc.{Call, PathBindable}
 import play.api.test.Helpers._
-import uk.gov.hmrc.play.language.LanguageUtils.{English, Welsh}
 
 class LanguageSelectionSpec extends PlaySpec with GuiceOneAppPerSuite {
 
@@ -31,6 +30,11 @@ class LanguageSelectionSpec extends PlaySpec with GuiceOneAppPerSuite {
   val messagesEnglish: Messages = Messages(Lang(new Locale("en")), messagesApi)
   val messagesWelsh: Messages = Messages(Lang(new Locale("cy")), messagesApi)
   val messagesSpanish: Messages = Messages(Lang(new Locale("es")), messagesApi)
+  val EnglishLangCode = "en"
+  val WelshLangCode = "cy"
+
+  val English: Lang = Lang(EnglishLangCode)
+  val Welsh: Lang = Lang(WelshLangCode)
 
   def languageMap: Map[String, Lang] = Map("english" -> English,
     "cymraeg" -> Welsh)

@@ -14,31 +14,21 @@
  * limitations under the License.
  */
 
-import play.core.PlayVersion
 import sbt._
 
 
 object AppDependencies {
 
-  private val urlBuilderVersion = "3.1.0"
-  private val ibm4jVersion = "63.1"
-  private val bootstrapPlay25Version = "4.13.0"
-
-  def compile(): Seq[ModuleID] = Seq(
-    "com.typesafe.play" %% "play" % PlayVersion.current % "provided",
-    "uk.gov.hmrc" %% "url-builder" % urlBuilderVersion,
-    "com.ibm.icu" % "icu4j" % ibm4jVersion,
-    "uk.gov.hmrc" %% "bootstrap-play-25" % bootstrapPlay25Version
+  val compile: Seq[ModuleID] = Seq(
+    "uk.gov.hmrc" %% "url-builder" % "3.1.0",
+    "com.ibm.icu" % "icu4j" % "64.2"
   )
 
-  private val scalaTestPlusVersion = "2.0.0"
-  private val pegdownVersion = "1.6.0"
-  private val scope = "test"
-
-  def test(): Seq[ModuleID] = Seq(
-    "com.typesafe.play" %% "play-test" % PlayVersion.current % scope,
-    "org.scalatestplus.play" %% "scalatestplus-play" % scalaTestPlusVersion % scope,
-    "org.pegdown" % "pegdown" % pegdownVersion % scope
-  )
+  val test: Seq[ModuleID] = Seq(
+    "org.scalatestplus.play" %% "scalatestplus-play" % "2.0.1",
+    "org.pegdown" % "pegdown" % "1.6.0"
+  ).map(_ % Test)
+  
+  val all: Seq[ModuleID] = compile ++ test
   
 }
