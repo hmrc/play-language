@@ -19,4 +19,5 @@ lazy val playLanguage = (project in file("."))
     resolvers += Resolver.typesafeRepo("releases"),
     resolvers += Resolver.bintrayRepo("hmrc", "releases")
   )
+  .settings(makePublicallyAvailableOnBintray := true)
 
