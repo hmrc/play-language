@@ -17,7 +17,6 @@ lazy val playLanguage = (project in file("."))
     crossScalaVersions := Seq("2.11.12"),
     libraryDependencies ++= AppDependencies.all,
     resolvers += Resolver.typesafeRepo("releases"),
-    resolvers += Resolver.bintrayRepo("hmrc", "releases")
+    resolvers += Resolver.bintrayRepo("hmrc", "releases"),
+    makePublicallyAvailableOnBintray := true
   )
-  .settings(makePublicallyAvailableOnBintray := true)
-
