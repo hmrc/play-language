@@ -24,10 +24,10 @@ import play.api.{Configuration, Play}
 import play.api.i18n.{Lang, Langs, Messages, MessagesApi}
 import play.api.mvc._
 
-/** This object provides access to common language utilities.
+/** This object provides access to common uk.gov.uk.gov.hmrc.play.language utilities.
   *
-  * This object contains language codes for English and Welsh and a
-  * function to return the current language based on a request header.
+  * This object contains uk.gov.uk.gov.hmrc.play.language codes for English and Welsh and a
+  * function to return the current uk.gov.uk.gov.hmrc.play.language based on a request header.
   *
   * Additionally, a Dates object is provided which provides helper
   * functions to return correctly formatted dates in both English
@@ -39,15 +39,15 @@ class LanguageUtils @Inject()(
                                configuration: Configuration
                              )(implicit messagesApi: MessagesApi) {
 
-  /** Returns the current language as a Lang object.
+  /** Returns the current uk.gov.uk.gov.hmrc.play.language as a Lang object.
     *
-    * This function returns the current language as an i18n Lang object. It first checks
+    * This function returns the current uk.gov.uk.gov.hmrc.play.language as an i18n Lang object. It first checks
     * that the PLAY_LANG cookie exists from the request object and then gets the value from it.
-    * If it does not exist then it returns the accepted language from the request object. If there
-    * is no Play application then it just defaults to return the accepted language in the request or
-    * use the default language.
+    * If it does not exist then it returns the accepted uk.gov.uk.gov.hmrc.play.language from the request object. If there
+    * is no Play application then it just defaults to return the accepted uk.gov.uk.gov.hmrc.play.language in the request or
+    * use the default uk.gov.uk.gov.hmrc.play.language.
     *
-    * @param request The RequestHeader object to extract the language information from.
+    * @param request The RequestHeader object to extract the uk.gov.uk.gov.hmrc.play.language information from.
     * @return Lang object containing the current langugage.
     */
   def getCurrentLang(implicit request: RequestHeader): Lang = {
@@ -58,8 +58,8 @@ class LanguageUtils @Inject()(
 
   /** Returns true if the lang passed exists within `play.i18n.langs` config value
     *
-    * @param lang The language to check against
-    * @return A boolean on wether this language is supported in the current application
+    * @param lang The uk.gov.uk.gov.hmrc.play.language to check against
+    * @return A boolean on wether this uk.gov.uk.gov.hmrc.play.language is supported in the current application
     */
   def isLangAvailable(lang: Lang): Boolean = {
     configuration.getStringSeq("play.i18n.langs").exists(_.contains(lang.code))
@@ -69,7 +69,7 @@ class LanguageUtils @Inject()(
     *
     * This function returns a filtered Map containing only languages which are enabled in the `play.i18n.langs`
     * configuration value. This function is to be used to dynamically populate which languages should be displayed
-    * on the applications language switcher.
+    * on the applications uk.gov.uk.gov.hmrc.play.language switcher.
     *
     * @param langMap List of all supported languages
     * @return filtered list of enabled languages
@@ -87,17 +87,17 @@ class LanguageUtils @Inject()(
 
     override def defaultTimeZone: TimeZone = TimeZone.getTimeZone("Europe/London")
 
-    override def to(implicit messages:Messages): String = messages("language.to")
+    override def to(implicit messages:Messages): String = messages("uk.gov.uk.gov.hmrc.play.language.to")
 
-    override def singular(implicit messages:Messages): String = messages("language.day.singular")
+    override def singular(implicit messages:Messages): String = messages("uk.gov.uk.gov.hmrc.play.language.day.singular")
 
-    override def plural(implicit messages:Messages): String = messages("language.day.plural")
+    override def plural(implicit messages:Messages): String = messages("uk.gov.uk.gov.hmrc.play.language.day.plural")
   }
 
   /**
     * A trait that correctly displays and formats dates in multiple languages.
     *
-    * This object contains helper methods to correctly format dates in any language supported
+    * This object contains helper methods to correctly format dates in any uk.gov.uk.gov.hmrc.play.language supported
     * by the IBM ICU library.
     *
     * This trait requires a default timezone to be defined, as well as String values for the English words:
@@ -105,7 +105,7 @@ class LanguageUtils @Inject()(
     * - day
     * - days
     *
-    * These values should come from a Messages file for each language that needs to be supported.
+    * These values should come from a Messages file for each uk.gov.uk.gov.hmrc.play.language that needs to be supported.
     *
     */
   trait Dates {
@@ -141,7 +141,7 @@ class LanguageUtils @Inject()(
       *
       * @param pattern - The date format pattern as a String.
       * @param messages    - The implicit lang object.
-      * @return - The SimpleDateFormat configured using the current language and pattern.
+      * @return - The SimpleDateFormat configured using the current uk.gov.uk.gov.hmrc.play.language and pattern.
       */
     private def createDateFormatForPattern(pattern: String)(implicit messages: Messages): SimpleDateFormat = {
       val uLocale = new ULocale(messages.lang.code)
@@ -238,7 +238,7 @@ class LanguageUtils @Inject()(
       * Lang("cy") example: 2015-01-25
       *
       * @param date - The LocalDate object to be converted.
-      * @param messages - The implicit language object.
+      * @param messages - The implicit uk.gov.uk.gov.hmrc.play.language object.
       * @return The date as a "yyyy-MM-dd" formatted string.
       */
     def shortDate(date: LocalDate)(implicit messages:Messages): String = shortDateFormat.format(date.toDate)
@@ -270,7 +270,7 @@ class LanguageUtils @Inject()(
       * 5, Lang("en") example: 5 days
       *
       * @param numberOfDays - The number of days.
-      * @param messages         - The implicit language object.
+      * @param messages         - The implicit uk.gov.uk.gov.hmrc.play.language object.
       * @return A string denoting "x" days.
       */
     def formatDays(numberOfDays: Int)(implicit messages:Messages): String = {

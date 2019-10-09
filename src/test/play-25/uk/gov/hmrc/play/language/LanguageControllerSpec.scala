@@ -21,7 +21,7 @@ import org.scalatestplus.play.PlaySpec
 import play.api.i18n.{Lang, MessagesApi}
 import play.api.mvc.Cookie
 import play.api.test.Helpers._
-import play.api.test._
+import play.api.test.{FakeRequest, PlayRunners}
 import play.api.{Configuration, Play}
 
 
@@ -86,7 +86,7 @@ class LanguageControllerSpec extends PlaySpec with PlayRunners {
       }
     }
 
-    "set the language in a cookie." in {
+    "set the uk.gov.uk.gov.hmrc.play.language in a cookie." in {
       running() { app =>
         val sut = app.injector.instanceOf[TestLanguageController]
         implicit val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
