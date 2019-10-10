@@ -21,9 +21,9 @@ import play.api.i18n.{I18nSupport, Lang}
 import play.api.mvc._
 
 /**
-  * LanguageController that switches the uk.gov.uk.gov.hmrc.play.language of the current web application.
+  * LanguageController that switches the language of the current web application.
   *
-  * This trait provides a means of switching the current uk.gov.uk.gov.hmrc.play.language and redirecting the user
+  * This trait provides a means of switching the current language and redirecting the user
   * back to their original location. It expects a fallbackURL to be defined when implemented.
   * It also expects a languageMap to be defined, this provides a way of mapping strings to Lang objects.
   *
@@ -40,24 +40,24 @@ abstract class LanguageController(
   /** A map from a String to Lang object **/
   protected def languageMap: Map[String, Lang]
 
-  private val SwitchIndicatorKey = "switching-uk.gov.uk.gov.hmrc.play.language"
+  private val SwitchIndicatorKey = "switching-language"
   private val FlashWithSwitchIndicator = Flash(Map(SwitchIndicatorKey -> "true"))
 
   /**
-    * A public interface to switch to a new uk.gov.uk.gov.hmrc.play.language.
+    * A public interface to switch to a new language.
     *
-    * The uk.gov.uk.gov.hmrc.play.language must be defined within the uk.gov.uk.gov.hmrc.play.language map else the current uk.gov.uk.gov.hmrc.play.language will be used.
+    * The language must be defined within the language map else the current language will be used.
     *
-    * This function expects a uk.gov.uk.gov.hmrc.play.language string as a parameter and will use this to switch
-    * the current application uk.gov.uk.gov.hmrc.play.language. This function expects a referrer value within
+    * This function expects a language string as a parameter and will use this to switch
+    * the current application language. This function expects a referrer value within
     * the request header and will redirect the user back to that value.
     * If it is not set then the redirect will be to the fallbackURL.
     *
     * The returned Redirect object will also contain a flashing parameter which can be
     * detected by controllers in order to show different behaviour if wanted.
     *
-    * @param language - The uk.gov.uk.gov.hmrc.play.language string to switch to.
-    * @return Redirect to referrer or fallbackURL, with new uk.gov.uk.gov.hmrc.play.language. Or fallbackURL with default lang.
+    * @param language - The language string to switch to.
+    * @return Redirect to referrer or fallbackURL, with new language. Or fallbackURL with default lang.
     *
     */
 
