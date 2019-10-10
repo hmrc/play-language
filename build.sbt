@@ -24,8 +24,8 @@ lazy val playLanguage = (project in file("."))
   .settings(PlayCrossCompilation.playCrossCompilationSettings,
     sourceDirectories in(Compile, TwirlKeys.compileTemplates) += {
       PlayCrossCompilation.playVersion match {
-        case Play25 => (sourceDirectory in Compile).value / "play-25" / "twirl"
-        case Play26 => (sourceDirectory in Compile).value / "play-26" / "twirl"
+        case Play25 => (sourceDirectory in Compile).value / "play-25"
+        case Play26 => (sourceDirectory in Compile).value / "play-26"
       }
     }
   )

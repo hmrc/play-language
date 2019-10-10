@@ -26,9 +26,6 @@ import play.api.i18n.{Lang, Messages, MessagesApi}
 import play.api.inject.guice.GuiceApplicationBuilder
 
 class LanguageUtilsSpec extends FlatSpec with Matchers with GuiceOneAppPerSuite {
-  override implicit lazy val app: Application = new GuiceApplicationBuilder()
-    .configure(Map("play.i18n.langs" -> Seq("en", "cy", "es")))
-    .build()
 
   implicit val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
   val messagesEnglish: Messages = messagesApi.preferred(Seq(Lang(new Locale("en"))))
