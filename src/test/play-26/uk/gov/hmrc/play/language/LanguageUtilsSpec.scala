@@ -21,9 +21,7 @@ import java.util.Locale
 import org.joda.time.{DateTime, LocalDate}
 import org.scalatest.{FlatSpec, Matchers}
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-import play.api.Application
 import play.api.i18n.{Lang, Messages, MessagesApi}
-import play.api.inject.guice.GuiceApplicationBuilder
 
 class LanguageUtilsSpec extends FlatSpec with Matchers with GuiceOneAppPerSuite {
 

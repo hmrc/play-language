@@ -20,9 +20,9 @@ import com.ibm.icu.text.SimpleDateFormat
 import com.ibm.icu.util.{TimeZone, ULocale}
 import javax.inject.Inject
 import org.joda.time.{DateTime, LocalDate}
-import play.api.{Configuration, Play}
 import play.api.i18n.{Lang, Langs, Messages, MessagesApi}
 import play.api.mvc._
+import play.api.{Configuration, Play}
 
 /** This object provides access to common language utilities.
   *
