@@ -26,9 +26,9 @@ import play.api.i18n.{Lang, Messages, MessagesApi}
 class LanguageUtilsSpec extends FlatSpec with Matchers with GuiceOneAppPerSuite {
 
   val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
-  val messagesEnglish: Messages = Messages(Lang(new Locale("en")), messagesApi)
-  val messagesWelsh: Messages = Messages(Lang(new Locale("cy")), messagesApi)
-  val messagesSpanish: Messages = Messages(Lang(new Locale("es")), messagesApi)
+  val messagesEnglish: Messages = messagesApi.preferred(Seq(Lang(new Locale("en"))))
+  val messagesWelsh: Messages = messagesApi.preferred(Seq(Lang(new Locale("cy"))))
+  val messagesSpanish: Messages = messagesApi.preferred(Seq(Lang(new Locale("es"))))
   val languageUtils: LanguageUtils = app.injector.instanceOf[LanguageUtils]
 
   val date = new LocalDate(2015, 1, 25)
@@ -43,7 +43,7 @@ class LanguageUtilsSpec extends FlatSpec with Matchers with GuiceOneAppPerSuite 
     languageUtils.Dates.formatDate(date)(messagesSpanish) shouldBe "25 enero 2015"
   }
 
-  "Method formatDate(date: LocalDate)" should "return correctly formatted date when no uk.gov.uk.gov.hmrc.play.language defined" in {
+  "Method formatDate(date: LocalDate)" should "return correctly formatted date when no language defined" in {
     languageUtils.Dates.formatDate(date)(messagesEnglish) shouldBe "25 January 2015"
   }
 

@@ -27,9 +27,9 @@ import play.api.test.Helpers._
 class LanguageSelectionSpec extends PlaySpec with GuiceOneAppPerSuite {
 
   val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
-  val messagesEnglish: Messages = Messages(Lang(new Locale("en")), messagesApi)
-  val messagesWelsh: Messages = Messages(Lang(new Locale("cy")), messagesApi)
-  val messagesSpanish: Messages = Messages(Lang(new Locale("es")), messagesApi)
+  val messagesEnglish: Messages = messagesApi.preferred(Seq(Lang(new Locale("en"))))
+  val messagesWelsh: Messages = messagesApi.preferred(Seq(Lang(new Locale("cy"))))
+  val messagesSpanish: Messages = messagesApi.preferred(Seq(Lang(new Locale("es"))))
   val EnglishLangCode = "en"
   val WelshLangCode = "cy"
 

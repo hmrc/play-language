@@ -86,7 +86,7 @@ class LanguageControllerSpec extends PlaySpec with PlayRunners {
       }
     }
 
-    "set the uk.gov.uk.gov.hmrc.play.language in a cookie." in {
+    "set the language in a cookie." in {
       running() { app =>
         val sut = app.injector.instanceOf[TestLanguageController]
         implicit val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
