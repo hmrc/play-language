@@ -25,7 +25,7 @@ import play.api.i18n.{Lang, Messages, MessagesApi}
 
 class LanguageUtilsSpec extends FlatSpec with Matchers with GuiceOneAppPerSuite {
 
-  val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
+  implicit val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
   val messagesEnglish: Messages = messagesApi.preferred(Seq(Lang(new Locale("en"))))
   val messagesWelsh: Messages = messagesApi.preferred(Seq(Lang(new Locale("cy"))))
   val messagesSpanish: Messages = messagesApi.preferred(Seq(Lang(new Locale("es"))))
