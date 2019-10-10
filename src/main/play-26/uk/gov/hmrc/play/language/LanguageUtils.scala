@@ -62,7 +62,7 @@ class LanguageUtils @Inject()(
     * @return A boolean on wether this language is supported in the current application
     */
   def isLangAvailable(lang: Lang): Boolean = {
-    configuration.getStringSeq("play.i18n.langs").exists(_.contains(lang.code))
+    configuration.get[Seq[String]]("play.i18n.langs").exists(_.contains(lang.code))
   }
 
   /** Filters a Map of languages against what languages are enabled in the current application
