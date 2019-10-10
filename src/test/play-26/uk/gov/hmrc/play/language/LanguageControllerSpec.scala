@@ -53,9 +53,9 @@ class LanguageControllerSpec extends PlaySpec with PlayRunners {
   private val refererValue = "/gov.uk"
   private val fallbackValue = "http://gov.uk/fallback"
 
-  "The switch uk.gov.uk.gov.hmrc.play.language endpoint" should {
+  "The switch language endpoint" should {
 
-    "change to welsh when uk.gov.uk.gov.hmrc.play.language is set to Welsh" in {
+    "change to welsh when language is set to Welsh" in {
       running() { app =>
         val sut = app.injector.instanceOf[TestLanguageController]
         implicit val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
@@ -86,7 +86,7 @@ class LanguageControllerSpec extends PlaySpec with PlayRunners {
       }
     }
 
-    "set the uk.gov.uk.gov.hmrc.play.language in a cookie." in {
+    "set the language in a cookie." in {
       running() { app =>
         val sut = app.injector.instanceOf[TestLanguageController]
         implicit val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
