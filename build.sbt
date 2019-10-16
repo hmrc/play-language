@@ -18,8 +18,7 @@ lazy val playLanguage = (project in file("."))
     libraryDependencies ++= AppDependencies.all,
     resolvers += Resolver.typesafeRepo("releases"),
     resolvers += Resolver.bintrayRepo("hmrc", "releases"),
-    makePublicallyAvailableOnBintray := true,
-    PlayKeys.playPlugin := true
+    makePublicallyAvailableOnBintray := true
   )
   .settings(PlayCrossCompilation.playCrossCompilationSettings,
     sourceDirectories in(Compile, TwirlKeys.compileTemplates) += {
