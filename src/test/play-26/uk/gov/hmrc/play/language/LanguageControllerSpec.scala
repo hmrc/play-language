@@ -19,17 +19,17 @@ package uk.gov.hmrc.play.language
 import com.google.inject.Inject
 import org.scalatestplus.play.PlaySpec
 import play.api.i18n.{Lang, MessagesApi}
-import play.api.mvc.Cookie
+import play.api.mvc.{ControllerComponents, Cookie}
 import play.api.test.Helpers._
-import play.api.test._
+import play.api.test.{FakeRequest, PlayRunners}
 import play.api.{Configuration, Play}
 
 
 class TestLanguageController @Inject()(
                                         configuration: Configuration,
                                         languageUtils: LanguageUtils,
-                                        val messagesApi: MessagesApi
-                                      ) extends LanguageController(configuration, languageUtils) {
+                                        cc: ControllerComponents
+                                      ) extends LanguageController(configuration, languageUtils, cc) {
 
   val EnglishLangCode = "en"
   val WelshLangCode = "cy"

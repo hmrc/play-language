@@ -19,16 +19,24 @@ import sbt._
 
 object AppDependencies {
 
-  val compile: Seq[ModuleID] = Seq(
-    "uk.gov.hmrc" %% "url-builder" % "3.1.0",
-    "com.ibm.icu" % "icu4j" % "64.2"
+  val compile: Seq[ModuleID] = PlayCrossCompilation.dependencies(
+    shared = Seq("com.ibm.icu" % "icu4j" % "64.2"),
+
+    play25 = Seq(
+      "com.typesafe.play" %% "play" % "2.5.19",
+      "uk.gov.hmrc" %% "url-builder" % "3.3.0-play-25"
+    ),
+    play26 = Seq(
+      "com.typesafe.play" %% "play" % "2.6.20",
+      "uk.gov.hmrc" %% "url-builder" % "3.3.0-play-26"
+    )
   )
 
-  val test: Seq[ModuleID] = Seq(
-    "org.scalatestplus.play" %% "scalatestplus-play" % "2.0.1",
-    "org.pegdown" % "pegdown" % "1.6.0"
-  ).map(_ % Test)
-  
+  val test: Seq[ModuleID] = PlayCrossCompilation.dependencies(
+    shared = Seq("org.pegdown" % "pegdown" % "1.6.0" % Test),
+    play25 = Seq("org.scalatestplus.play" %% "scalatestplus-play" % "2.0.1" % Test),
+    play26 = Seq("org.scalatestplus.play" %% "scalatestplus-play" % "3.1.2" % Test)
+  )
+
   val all: Seq[ModuleID] = compile ++ test
-  
 }
