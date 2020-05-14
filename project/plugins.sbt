@@ -15,6 +15,7 @@ addSbtPlugin("uk.gov.hmrc" % "sbt-play-cross-compilation" % "0.20.0")
 val playPlugin = sys.env.getOrElse("PLAY_VERSION", "2.5") match {
   case "2.5" => "com.typesafe.play" % "sbt-plugin" % "2.5.19"
   case "2.6" => "com.typesafe.play" % "sbt-plugin" % "2.6.20"
+  case "2.7" => "com.typesafe.play" % "sbt-plugin" % "2.7.4"
 }
 
 addSbtPlugin(playPlugin)

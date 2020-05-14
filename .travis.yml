@@ -8,7 +8,7 @@ matrix:
   include:
     - env: PLAY_VERSION=2.5
     - env: PLAY_VERSION=2.6
-#    - env: PLAY_VERSION=2.7
+    - env: PLAY_VERSION=2.7
 cache:
   directories:
     - $HOME/.ivy2/cache
