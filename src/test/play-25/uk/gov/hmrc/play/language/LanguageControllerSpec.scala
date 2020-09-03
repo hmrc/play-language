@@ -52,6 +52,7 @@ class LanguageControllerSpec extends PlaySpec with PlayRunners {
 
   private val refererValue = "/gov.uk"
   private val fallbackValue = "http://gov.uk/fallback"
+  private val maliciousValue ="https://www.bad.host/exploit?a=b#foo"
 
   "The switch language endpoint" should {
 
@@ -97,5 +98,39 @@ class LanguageControllerSpec extends PlaySpec with PlayRunners {
         }
       }
     }
+
+    "prevent redirection to another host and preserve the query params" in {
+      running() { app =>
+
+        val sut = app.injector.instanceOf[TestLanguageController]
+        val request = FakeRequest().withHeaders(REFERER -> maliciousValue)
+        val res = sut.switchToLanguage("english")(request)
+        status(res) must be(SEE_OTHER)
+        redirectLocation(res).get must not startWith "https://"
+      }
+    }
+
+    "prevent bypassing the relative uri by passing a second hostname after the first in the referer" in {
+      running() { app =>
+
+        val sut = app.injector.instanceOf[TestLanguageController]
+        val request = FakeRequest().withHeaders(REFERER -> s"http://scarificial-hostname/$maliciousValue")
+        val res = sut.switchToLanguage("english")(request)
+        status(res) must be(SEE_OTHER)
+        redirectLocation(res) must be(Some(s"/$maliciousValue"))
+      }
+    }
+
+    "redirect to a relative url when the refer" in {
+      running() { app =>
+
+        val sut = app.injector.instanceOf[TestLanguageController]
+        val request = FakeRequest().withHeaders(REFERER -> s"https://test:foo@www.bad.host/exploit?a=b#foo")
+        val res = sut.switchToLanguage("english")(request)
+        status(res) must be(SEE_OTHER)
+        redirectLocation(res) must be(Some("/exploit?a=b#foo"))
+      }
+    }
+
   }
 }
