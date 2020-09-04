@@ -52,7 +52,7 @@ class LanguageControllerSpec extends PlaySpec with PlayRunners {
 
   private val refererValue = "/gov.uk"
   private val fallbackValue = "http://gov.uk/fallback"
-  private val maliciousValue ="https://www.bad.host/exploit?a=b#foo"
+  private val maliciousValue ="https://www.bad.host/path?a=b#foo"
 
   "The switch language endpoint" should {
 
@@ -99,20 +99,28 @@ class LanguageControllerSpec extends PlaySpec with PlayRunners {
       }
     }
 
-    "prevent redirection to another host and preserve the query params" in {
+    "redirect to fallback value when referer is invalid" in {
       running() { app =>
+        val sut = app.injector.instanceOf[TestLanguageController]
+        val request = FakeRequest().withHeaders(REFERER -> "not a [valid url]!!\n")
+        val res = sut.switchToLanguage("english")(request)
+        status(res) must be(SEE_OTHER)
+        redirectLocation(res) must be(Some(fallbackValue))
+      }
+    }
 
+    "redirect to a relative url" in {
+      running() { app =>
         val sut = app.injector.instanceOf[TestLanguageController]
         val request = FakeRequest().withHeaders(REFERER -> maliciousValue)
         val res = sut.switchToLanguage("english")(request)
         status(res) must be(SEE_OTHER)
-        redirectLocation(res).get must not startWith "https://"
+        redirectLocation(res) must be(Some(s"/path?a=b#foo"))
       }
     }
 
     "prevent bypassing the relative uri by passing a second hostname after the first in the referer" in {
       running() { app =>
-
         val sut = app.injector.instanceOf[TestLanguageController]
         val request = FakeRequest().withHeaders(REFERER -> s"http://scarificial-hostname/$maliciousValue")
         val res = sut.switchToLanguage("english")(request)
@@ -121,14 +129,13 @@ class LanguageControllerSpec extends PlaySpec with PlayRunners {
       }
     }
 
-    "redirect to a relative url when the refer" in {
+    "redirect to a relative url when referer url has an auth section" in {
       running() { app =>
-
         val sut = app.injector.instanceOf[TestLanguageController]
-        val request = FakeRequest().withHeaders(REFERER -> s"https://test:foo@www.bad.host/exploit?a=b#foo")
+        val request = FakeRequest().withHeaders(REFERER -> s"https://test:foo@www.bad.host/path?a=b#foo")
         val res = sut.switchToLanguage("english")(request)
         status(res) must be(SEE_OTHER)
-        redirectLocation(res) must be(Some("/exploit?a=b#foo"))
+        redirectLocation(res) must be(Some("/path?a=b#foo"))
       }
     }
   }
