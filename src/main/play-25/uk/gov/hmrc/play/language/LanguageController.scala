@@ -16,9 +16,13 @@
 
 package uk.gov.hmrc.play.language
 
+import java.net.URI
+
 import play.api.Configuration
 import play.api.i18n.{I18nSupport, Lang}
 import play.api.mvc._
+
+import scala.util.Try
 
 /**
   * LanguageController that switches the language of the current web application.
@@ -65,8 +69,16 @@ abstract class LanguageController(
     val lang: Lang =
       if (enabled) languageMap.getOrElse(language, languageUtils.getCurrentLang)
       else languageUtils.getCurrentLang
-    val redirectURL: String = request.headers.get(REFERER).getOrElse(fallbackURL)
+    val redirectURL: String = request.headers.get(REFERER).flatMap(asRelativeUrl).getOrElse(fallbackURL)
     Redirect(redirectURL).withLang(Lang.apply(lang.code)).flashing(FlashWithSwitchIndicator)
   }
+
+  private def asRelativeUrl(url:String): Option[String] =
+    for {
+      uri      <- Try(new URI(url)).toOption
+      path     <- Option(uri.getPath)
+      query    <- Option(uri.getQuery).map("?" + _).orElse(Some(""))
+      fragment <- Option(uri.getRawFragment).map("#" + _).orElse(Some(""))
+    } yield  s"$path$query$fragment"
 
 }
