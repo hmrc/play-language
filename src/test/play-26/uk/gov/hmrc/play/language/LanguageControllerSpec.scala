@@ -109,6 +109,16 @@ class LanguageControllerSpec extends PlaySpec with PlayRunners {
       }
     }
 
+    "redirect to fallback value when referer has no path" in {
+      running() { app =>
+        val sut = app.injector.instanceOf[TestLanguageController]
+        val request = FakeRequest().withHeaders(REFERER -> "http://gov.uk")
+        val res = sut.switchToLanguage("english")(request)
+        status(res) must be(SEE_OTHER)
+        redirectLocation(res) must be(Some(fallbackValue))
+      }
+    }
+
     "redirect to a relative url" in {
       running() { app =>
         val sut = app.injector.instanceOf[TestLanguageController]
