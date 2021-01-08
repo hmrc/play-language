@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,6 @@ package uk.gov.hmrc.play.language
 
 import java.net.URI
 
-import play.api.Configuration
 import play.api.i18n.{I18nSupport, Lang}
 import play.api.mvc._
 
@@ -32,11 +31,8 @@ import scala.util.Try
   * It also expects a languageMap to be defined, this provides a way of mapping strings to Lang objects.
   *
   */
-abstract class LanguageController(
-                                   configuration: Configuration,
-                                   languageUtils: LanguageUtils,
-                                   cc: ControllerComponents
-                                 ) extends AbstractController(cc) with I18nSupport {
+abstract class LanguageController(languageUtils: LanguageUtils, cc: ControllerComponents)
+  extends AbstractController(cc) with I18nSupport {
 
   /** A URL to fallback to if there is no referrer found in the request header **/
   protected def fallbackURL: String
@@ -84,6 +80,5 @@ abstract class LanguageController(
       query    <- Option(uri.getQuery).map("?" + _).orElse(Some(""))
       fragment <- Option(uri.getRawFragment).map("#" + _).orElse(Some(""))
     } yield  s"$path$query$fragment"
-
 
 }

@@ -1,6 +1,4 @@
 import sbt.Keys._
-import uk.gov.hmrc.SbtArtifactory
-import uk.gov.hmrc.playcrosscompilation.PlayVersion.{Play25, Play26, Play27}
 import uk.gov.hmrc.versioning.SbtGitVersioning
 import uk.gov.hmrc.versioning.SbtGitVersioning.autoImport.majorVersion
 
@@ -8,7 +6,7 @@ import uk.gov.hmrc.versioning.SbtGitVersioning.autoImport.majorVersion
 val appName = "play-language"
 
 lazy val playLanguage = (project in file("."))
-  .enablePlugins(PlayScala, SbtAutoBuildPlugin, SbtGitVersioning, SbtArtifactory)
+  .enablePlugins(PlayScala, SbtAutoBuildPlugin, SbtGitVersioning)
   .disablePlugins(PlayLayoutPlugin)
   .settings(
     majorVersion := 4,
@@ -18,16 +16,8 @@ lazy val playLanguage = (project in file("."))
     PlayCrossCompilation.playCrossCompilationSettings,
     libraryDependencies ++= AppDependencies.all,
     resolvers += Resolver.typesafeRepo("releases"),
-    resolvers += Resolver.bintrayRepo("hmrc", "releases"),
-    makePublicallyAvailableOnBintray := true
+    resolvers += Resolver.bintrayRepo("hmrc", "releases")
   )
-  .settings(sourceDirectories in(Compile, TwirlKeys.compileTemplates) += {
-      PlayCrossCompilation.playVersion match {
-        case Play25 => (sourceDirectory in Compile).value / "play-25"
-        case Play26 => (sourceDirectory in Compile).value / "play-26"
-        case Play27 => (sourceDirectory in Compile).value / "play-26"
-      }
-    }
-  )
-
-
+  .settings(sourceDirectories in(Compile, TwirlKeys.compileTemplates) +=
+    (sourceDirectory in Compile).value / "play-26")
+  .disablePlugins(JUnitXmlReportPlugin) //Required to prevent https://github.com/scalatest/scalatest/issues/1427
