@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,18 +18,15 @@ package uk.gov.hmrc.play.language
 
 import com.google.inject.Inject
 import org.scalatestplus.play.PlaySpec
+import play.api.Play
 import play.api.i18n.{Lang, MessagesApi}
 import play.api.mvc.{ControllerComponents, Cookie}
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, PlayRunners}
-import play.api.{Configuration, Play}
 
 
-class TestLanguageController @Inject()(
-                                        configuration: Configuration,
-                                        languageUtils: LanguageUtils,
-                                        cc: ControllerComponents
-                                      ) extends LanguageController(configuration, languageUtils, cc) {
+class TestLanguageController @Inject()(languageUtils: LanguageUtils, cc: ControllerComponents)
+  extends LanguageController(languageUtils, cc) {
 
   val EnglishLangCode = "en"
   val WelshLangCode = "cy"
@@ -149,4 +146,5 @@ class LanguageControllerSpec extends PlaySpec with PlayRunners {
       }
     }
   }
+
 }

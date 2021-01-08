@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,10 +34,8 @@ import play.api.{Configuration, Play}
   * and Welsh.
   *
   */
-class LanguageUtils @Inject()(
-                               langs: Langs,
-                               configuration: Configuration
-                             )(implicit messagesApi: MessagesApi) {
+class LanguageUtils @Inject()(langs: Langs, configuration: Configuration)
+                             (implicit messagesApi: MessagesApi) {
 
   /** Returns the current language as a Lang object.
     *
@@ -51,9 +49,9 @@ class LanguageUtils @Inject()(
     * @return Lang object containing the current langugage.
     */
   def getCurrentLang(implicit request: RequestHeader): Lang = {
-      val maybeLangFromCookie = request.cookies.get(Play.langCookieName).flatMap(c => Lang.get(c.value))
+    val maybeLangFromCookie = request.cookies.get(Play.langCookieName).flatMap(c => Lang.get(c.value))
 
-      maybeLangFromCookie.getOrElse(langs.preferred(request.acceptLanguages))
+    maybeLangFromCookie.getOrElse(langs.preferred(request.acceptLanguages))
   }
 
   /** Returns true if the lang passed exists within `play.i18n.langs` config value
@@ -87,11 +85,11 @@ class LanguageUtils @Inject()(
 
     override def defaultTimeZone: TimeZone = TimeZone.getTimeZone("Europe/London")
 
-    override def to(implicit messages:Messages): String = messages("language.to")
+    override def to(implicit messages: Messages): String = messages("language.to")
 
-    override def singular(implicit messages:Messages): String = messages("language.day.singular")
+    override def singular(implicit messages: Messages): String = messages("language.day.singular")
 
-    override def plural(implicit messages:Messages): String = messages("language.day.plural")
+    override def plural(implicit messages: Messages): String = messages("language.day.plural")
   }
 
   /**
@@ -113,16 +111,16 @@ class LanguageUtils @Inject()(
     /** The timezone to use when formatting dates */
     def defaultTimeZone: TimeZone
 
-    /** The value of the word 'to' **/
-    def to(implicit messages:Messages): String
+    /** The value of the word 'to' * */
+    def to(implicit messages: Messages): String
 
-    /** The value of the singular of the word 'day' **/
-    def singular(implicit messages:Messages): String
+    /** The value of the singular of the word 'day' * */
+    def singular(implicit messages: Messages): String
 
-    /** The value of the plural of the word 'day' **/
-    def plural(implicit messages:Messages): String
+    /** The value of the plural of the word 'day' * */
+    def plural(implicit messages: Messages): String
 
-    /** Helper methods to format dates using various patterns **/
+    /** Helper methods to format dates using various patterns * */
     private def dateFormat(implicit messages: Messages) = createDateFormatForPattern("d MMMM y")
 
     private def dateFormatAbbrMonth(implicit messages: Messages) = createDateFormatForPattern("d MMM y")
@@ -139,8 +137,8 @@ class LanguageUtils @Inject()(
       * If the lang does not contain a value that is supported by the IBM ICU library then the default
       * Locale is used instead.
       *
-      * @param pattern - The date format pattern as a String.
-      * @param messages    - The implicit lang object.
+      * @param pattern  - The date format pattern as a String.
+      * @param messages - The implicit lang object.
       * @return - The SimpleDateFormat configured using the current language and pattern.
       */
     private def createDateFormatForPattern(pattern: String)(implicit messages: Messages): SimpleDateFormat = {
@@ -161,11 +159,11 @@ class LanguageUtils @Inject()(
       * Lang("en") example: 25 January 2015
       * Lang("cy") example: 25 Ionawr 2015
       *
-      * @param date The LocalDate object to convert.
+      * @param date     The LocalDate object to convert.
       * @param messages The implicit lang object.
       * @return The date as a "D MMMM Y" formatted string.
       */
-    def formatDate(date: LocalDate)(implicit messages:Messages): String = dateFormat.format(date.toDate)
+    def formatDate(date: LocalDate)(implicit messages: Messages): String = dateFormat.format(date.toDate)
 
     /**
       * Converts an Option LocalDate object into a String with the format "D MMMM Y"
@@ -178,12 +176,12 @@ class LanguageUtils @Inject()(
       * Lang("cy") example: 25 Ionawr 2015
       * None example: default
       *
-      * @param date    The Optional LocalDate object to convert.
-      * @param default A default value to return if the date option is not set.
-      * @param messages    The implicit lang object.
+      * @param date     The Optional LocalDate object to convert.
+      * @param default  A default value to return if the date option is not set.
+      * @param messages The implicit lang object.
       * @return Either the date as a "D MMMM Y" formatted string or the default value if not set.
       */
-    def formatDate(date: Option[LocalDate], default: String)(implicit messages:Messages): String =
+    def formatDate(date: Option[LocalDate], default: String)(implicit messages: Messages): String =
       date match {
         case Some(d) => formatDate(d)
         case None => default
@@ -198,11 +196,11 @@ class LanguageUtils @Inject()(
       * Lang("en") example: 25 Jan 2015
       * Lang("cy") example: 25 Ion 2015
       *
-      * @param date The LocalDate object to convert.
+      * @param date     The LocalDate object to convert.
       * @param messages The implicit lang object.
       * @return The date as a "D MMM Y" formatted string.
       */
-    def formatDateAbbrMonth(date: LocalDate)(implicit messages:Messages): String = dateFormatAbbrMonth.format(date.toDate)
+    def formatDateAbbrMonth(date: LocalDate)(implicit messages: Messages): String = dateFormatAbbrMonth.format(date.toDate)
 
     /**
       * Converts an optional DateTime object into a human readable String with the format: "h:mmaa, EEEE d MMMM yyyy"
@@ -214,12 +212,12 @@ class LanguageUtils @Inject()(
       * Lang("en") example: "3:45am, Sunday 25 January 2015"
       * Lang("cy" example: "3:45am, Dydd Sul 25 Ionawr 2015"
       *
-      * @param date    The optional DateTime object to convert.
-      * @param default The default value to return if the date is missing.
-      * @param messages    The implicit lang object.
+      * @param date     The optional DateTime object to convert.
+      * @param default  The default value to return if the date is missing.
+      * @param messages The implicit lang object.
       * @return The date and time as a "h:mmaa, EEEE d MMMM yyyy" formatted string.
       */
-    def formatEasyReadingTimestamp(date: Option[DateTime], default: String)(implicit messages:Messages): String =
+    def formatEasyReadingTimestamp(date: Option[DateTime], default: String)(implicit messages: Messages): String =
       date match {
         case Some(d) =>
           val time = easyReadingTimestampFormat.format(d.toDate).toLowerCase
@@ -237,11 +235,11 @@ class LanguageUtils @Inject()(
       * Lang("en") example: 2015-01-25
       * Lang("cy") example: 2015-01-25
       *
-      * @param date - The LocalDate object to be converted.
+      * @param date     - The LocalDate object to be converted.
       * @param messages - The implicit language object.
       * @return The date as a "yyyy-MM-dd" formatted string.
       */
-    def shortDate(date: LocalDate)(implicit messages:Messages): String = shortDateFormat.format(date.toDate)
+    def shortDate(date: LocalDate)(implicit messages: Messages): String = shortDateFormat.format(date.toDate)
 
     /**
       * Converts two LocalDate objects into a human readable String to show a date range.
@@ -253,10 +251,10 @@ class LanguageUtils @Inject()(
       *
       * @param startDate The first date.
       * @param endDate   The second date.
-      * @param messages      The implicit lang value.
+      * @param messages  The implicit lang value.
       * @return A string in the format of "D MMMM Y to D MMMM Y"
       */
-    def formatDateRange(startDate: LocalDate, endDate: LocalDate)(implicit messages:Messages): String =
+    def formatDateRange(startDate: LocalDate, endDate: LocalDate)(implicit messages: Messages): String =
       Seq(formatDate(startDate), to, formatDate(endDate)).mkString(" ")
 
     /**
@@ -270,10 +268,10 @@ class LanguageUtils @Inject()(
       * 5, Lang("en") example: 5 days
       *
       * @param numberOfDays - The number of days.
-      * @param messages         - The implicit language object.
+      * @param messages     - The implicit language object.
       * @return A string denoting "x" days.
       */
-    def formatDays(numberOfDays: Int)(implicit messages:Messages): String = {
+    def formatDays(numberOfDays: Int)(implicit messages: Messages): String = {
       val dayOrDays = if (numberOfDays == 1) singular else plural
       s"$numberOfDays $dayOrDays"
     }

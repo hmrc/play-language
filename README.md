@@ -23,7 +23,7 @@ resolvers += Resolver.bintrayRepo("hmrc", "releases")
 libraryDependencies += "uk.gov.hmrc" %% "play-language" % "[INSERT VERSION]"
 ```
 
-## Configuration - Play-2.5 (version 4.x.x)
+## Configuration - Play 2.6 and 2.7 (version 4.x.x)
 
 Create your own custom LanguageController
 
@@ -105,7 +105,6 @@ class AppConfig @Inject()(languageUtils: LanguageUtils) {
 
 ```
 
-
 #### Using [govuk-template]("https://github.com/hmrc/govuk-template"):
 Pass the following arguments to your template renderer
 ``` scala 
@@ -117,84 +116,6 @@ Pass the following arguments to your template renderer
 },
 "isWelsh" -> (messages.lang.code == "cy")
 
-```
-
-
-
-## Configuration - Play-2.5 (version 3.0.0)
-
-Create your own custom LanguageController:
-
-``` scala
-package uk.gov.hmrc.project.controllers
-
-import javax.inject.Inject
-import play.api.Application
-import play.api.i18n.MessagesApi
-import uk.gov.hmrc.project.FrontendAppConfig
-import uk.gov.hmrc.play.config.RunMode
-import uk.gov.hmrc.play.language.LanguageController
-
-class LanguageSwitchController @Inject()(val appConfig: FrontendAppConfig, override implicit val messagesApi: MessagesApi, implicit val app: Application)
-  extends LanguageController with RunMode {
-
-  def langToCall(lang: String) = appConfig.routeToSwitchLanguage
-
-  // Replace with a suitable fallback or read it from config
-  override protected def fallbackURL: String = routes.IndexController.onPageLoad().url
-
-  override def languageMap = appConfig.languageMap
-}
-```
-
-Add the following to the application conf file for each language you support:
-
-```
-play.i18n.langs = ["en", "cy"]
-```
-
-Add the following to your application's custom routes file.
-
-```
-GET     /language/:lang       uk.gov.hmrc.project.controllers.CustomLanguageController.switchToLanguage(lang: String)
-```
-
-Add the following to your AppConfig trait.
-
-``` scala
-  def languageMap: Map[String, Lang] = Map(
-    "english" -> Lang("en"),
-    "cymraeg" -> Lang("cy"))
-
-  def routeToSwitchLanguage = (lang: String) => routes.LanguageSwitchController.switchToLanguage(lang)
-
-  val languageTranslationEnabled: Boolean
-```
-
-And the following to the FrontendAppConfig class that extends that trait:
-
-``` scala
-  override lazy val languageTranslationEnabled =
-    configuration.getBoolean("microservice.services.features.welsh-translation").getOrElse(true)
-```
-
-To show the language toggles, place this in your Twirl templates (typically inside the `@mainContentHeader` section in `govuk_wrapper.scala.html`)
-
-``` scala
-    @if(appConfig.languageTranslationEnabled) {
-        @views.html.language_selection(
-            appConfig.languageMap,
-            appConfig.routeToSwitchLanguage,
-            Some("custom-class"))
-    }
-```
-
-In order to show each language text to the user, create a `messages.xx` file within `/conf`, where xx is the language code, and put your translations within there, using the same message keys.
-
-There is also a feature toggle for the language switcher. If you wish to disable this feature, add the following to your application.conf file:
-
-```
-microservice.services.features.welsh-translation=false
 ```
 
 ## License ##
