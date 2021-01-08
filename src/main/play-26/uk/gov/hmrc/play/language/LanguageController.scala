@@ -32,6 +32,8 @@ import scala.util.Try
   * It also expects a languageMap to be defined, this provides a way of mapping strings to Lang objects.
   *
   */
+
+
 abstract class LanguageController(
                                    configuration: Configuration,
                                    languageUtils: LanguageUtils,
