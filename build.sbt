@@ -20,5 +20,4 @@ lazy val playLanguage = (project in file("."))
   )
   .settings(sourceDirectories in(Compile, TwirlKeys.compileTemplates) +=
     (sourceDirectory in Compile).value / "play-26")
-
-
+  .disablePlugins(JUnitXmlReportPlugin) //Required to prevent https://github.com/scalatest/scalatest/issues/1427
