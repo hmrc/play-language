@@ -39,10 +39,6 @@ class LanguageUtilsSpec extends FlatSpec with Matchers with GuiceOneAppPerSuite 
     languageUtils.Dates.formatDate(date)(messagesWelsh) shouldBe "25 Ionawr 2015"
   }
 
-  "Method formatDate(date: LocalDate)" should "return correctly formatted date in another Language" in {
-    languageUtils.Dates.formatDate(date)(messagesSpanish) shouldBe "25 enero 2015"
-  }
-
   "Method formatDate(date: LocalDate)" should "return correctly formatted date when no language defined" in {
     languageUtils.Dates.formatDate(date)(messagesEnglish) shouldBe "25 January 2015"
   }

@@ -7,6 +7,7 @@ tmp
 .history
 dist
 /.idea
+/.bsp
 /*.iml
 /*.ipr
 /out
