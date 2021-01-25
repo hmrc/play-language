@@ -23,29 +23,32 @@ resolvers += Resolver.bintrayRepo("hmrc", "releases")
 libraryDependencies += "uk.gov.hmrc" %% "play-language" % "[INSERT VERSION]"
 ```
 
-## Configuration - Play 2.6 and 2.7 (version 4.x.x)
+## Configuration - Play 2.6 and 2.7 (version 4.7.0 and higher)
 
 Create your own custom LanguageController
 
 ``` scala
+import uk.gov.hmrc.YOUR_APPLICATION_PACKAGE.config.AppConfig
 import com.google.inject.Inject
-import play.api.i18n.{MessagesApi, Lang}
-import play.api.Configuration
+import javax.inject.Singleton
+import play.api.i18n.Lang
 import uk.gov.hmrc.play.language.{LanguageController, LanguageUtils}
+import play.api.mvc._
 
 class CustomLanguageController @Inject()(
-                                        configuration: Configuration,
-                                        languageUtils: LanguageUtils,
-                                        val messagesApi: MessagesApi
-                                      ) extends LanguageController(configuration, languageUtils) {
+                                        cc: ControllerComponents,
+                                        languageUtils: LanguageUtils
+                                      ) extends LanguageController(languageUtils, cc) {
+  import appConfig._
+
+  override protected def languageMap: Map[String, Lang] = {
+    if (appConfig.welshLanguageSupportEnabled) Map(en -> Lang(en), cy -> Lang(cy))
+    else Map(en -> Lang(en))
+  }
   
-  //This can be from a configuration value. If you are using play-language's html, this should be from the configuration value set below
-  override def languageMap: Map[String, Lang] = Map(
-    "english" -> Lang("en"),
-    "cymraeg" -> Lang("cy")    
-  )
-  
-  override def fallbackURL: String = "https://www.gov.uk/fallback"                           
+  override def fallbackURL: String =
+    "https://www.gov.uk/government/organisations/hm-revenue-customs"
+                      
 }
 ```
 
