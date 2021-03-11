@@ -2,3 +2,5 @@ language.to=to
 language.month=month
 language.day.singular=day
 language.day.plural=days
+language.toggle.hidden.english=Change language to English
+language.toggle.hidden.cymraeg=Newid yr iaith ir Gymraeg
