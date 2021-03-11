@@ -56,8 +56,7 @@ class LanguageSelectionSpec extends PlaySpec with GuiceOneAppPerSuite {
     "show correct current language message when current language is English" in {
       val html = views.html.language_selection.render(languageMap, langToUrl, None, None, messagesEnglish)
       contentType(html) must be("text/html")
-      contentAsString(html) must include("English")
-      contentAsString(html) must not include ">English<"
+      contentAsString(html) must include("<span aria-current=\"true\">English</span>")
     }
 
     "give a link to switch to English when current language is Welsh" in {
@@ -70,14 +69,13 @@ class LanguageSelectionSpec extends PlaySpec with GuiceOneAppPerSuite {
     "show correct current language message when current language is Welsh" in {
       val html = views.html.language_selection.render(languageMap, langToUrl, None, None, messagesWelsh)
       contentType(html) must be("text/html")
-      contentAsString(html) must include("Cymraeg")
-      contentAsString(html) must not include ">Cymraeg<"
+      contentAsString(html) must include("<span aria-current=\"true\">Cymraeg</span>")
     }
 
     "show a custom class if it is set" in {
       val html = views.html.language_selection.render(languageMap, langToUrl, Some("float--right"), None, messagesWelsh)
       contentType(html) must be("text/html")
-      contentAsString(html) must include("class=\"float--right\"")
+      contentAsString(html) must include("class=\"float--right")
     }
 
     "show a data-journey-click attribute for GA if it is set and language is Welsh" in {
@@ -101,8 +99,7 @@ class LanguageSelectionSpec extends PlaySpec with GuiceOneAppPerSuite {
 
       val html = views.html.language_selection.render(mockLanguageMap, langToUrl, None, None, messagesSpanish)
       contentType(html) must be("text/html")
-      contentAsString(html) must include("Español")
-      contentAsString(html) must not include ">Español<"
+      contentAsString(html) must include("<span aria-current=\"true\">Español</span>")
     }
   }
 }
