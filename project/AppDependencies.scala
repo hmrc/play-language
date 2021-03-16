@@ -26,13 +26,13 @@ object AppDependencies {
     ),
 
     play26 = Seq(
-      "uk.gov.hmrc"           %% "url-builder"  % "4.0.0-play-26"
+      "uk.gov.hmrc"           %% "url-builder"  % "3.5.0-play-26"
     ),
     play27 = Seq(
-      "uk.gov.hmrc"           %% "url-builder"  % "4.0.0-play-27"
+      "uk.gov.hmrc"           %% "url-builder"  % "3.5.0-play-27"
     ),
     play28 = Seq(
-      "uk.gov.hmrc"           %% "url-builder"  % "4.0.0-play-28"
+      "uk.gov.hmrc"           %% "url-builder"  % "3.5.0-play-28"
     )
   )
 

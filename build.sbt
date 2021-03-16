@@ -10,7 +10,7 @@ lazy val playLanguage = (project in file("."))
   .enablePlugins(PlayScala, SbtAutoBuildPlugin, SbtGitVersioning)
   .disablePlugins(PlayLayoutPlugin)
   .settings(
-    majorVersion := 5,
+    majorVersion := 4,
     name := appName,
     scalaVersion := "2.12.13",
     PlayCrossCompilation.playCrossCompilationSettings,
