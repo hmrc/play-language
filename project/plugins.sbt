@@ -2,7 +2,7 @@ resolvers += Resolver.bintrayIvyRepo("hmrc", "sbt-plugin-releases")
 resolvers += Resolver.bintrayRepo("hmrc", "releases")
 resolvers += Resolver.typesafeRepo("releases")
 
-val playPlugin = sys.env.getOrElse("PLAY_VERSION", "2.8") match {
+val playPlugin = sys.env.getOrElse("PLAY_VERSION", "2.6") match {
   case "2.6" => "com.typesafe.play" % "sbt-plugin" % "2.6.25"
   case "2.7" => "com.typesafe.play" % "sbt-plugin" % "2.7.9"
   case "2.8" => "com.typesafe.play" % "sbt-plugin" % "2.8.7"
