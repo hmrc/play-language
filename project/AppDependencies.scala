@@ -15,27 +15,32 @@
  */
 
 import sbt._
-
+import play.core.PlayVersion
 
 object AppDependencies {
 
   val compile: Seq[ModuleID] = PlayCrossCompilation.dependencies(
-    shared = Seq("com.ibm.icu" % "icu4j" % "64.2"),
+    shared = Seq(
+      "com.ibm.icu"           %  "icu4j"        % "68.2",
+      "com.typesafe.play"     %% "play"         % PlayVersion.current
+    ),
 
     play26 = Seq(
-      "com.typesafe.play"     %% "play"         % "2.6.25",
-      "uk.gov.hmrc"           %% "url-builder"  % "3.4.0-play-26"
+      "uk.gov.hmrc"           %% "url-builder"  % "4.0.0-play-26"
     ),
     play27 = Seq(
-      "com.typesafe.play"     %% "play"         % "2.7.4",
-      "uk.gov.hmrc"           %% "url-builder"  % "3.4.0-play-27"
+      "uk.gov.hmrc"           %% "url-builder"  % "4.0.0-play-27"
+    ),
+    play28 = Seq(
+      "uk.gov.hmrc"           %% "url-builder"  % "4.0.0-play-28"
     )
   )
 
   val test: Seq[ModuleID] = PlayCrossCompilation.dependencies(
     shared = Seq("org.pegdown" % "pegdown" % "1.6.0" % Test),
     play26 = Seq("org.scalatestplus.play" %% "scalatestplus-play" % "3.1.2" % Test),
-    play27 = Seq("org.scalatestplus.play" %% "scalatestplus-play" % "4.0.3" % Test)
+    play27 = Seq("org.scalatestplus.play" %% "scalatestplus-play" % "4.0.3" % Test),
+    play28 = Seq("org.scalatestplus.play" %% "scalatestplus-play" % "5.0.0" % Test)
   )
 
   val all: Seq[ModuleID] = compile ++ test
