@@ -2,9 +2,9 @@ import sbt.Keys._
 import uk.gov.hmrc.versioning.SbtGitVersioning
 import uk.gov.hmrc.versioning.SbtGitVersioning.autoImport.majorVersion
 
-
 val appName = "play-language"
-val scalaVersions = Seq("2.11.12", "2.12.10")
+
+val silencerVersion = "1.7.3"
 
 lazy val playLanguage = (project in file("."))
   .enablePlugins(PlayScala, SbtAutoBuildPlugin, SbtGitVersioning)
@@ -12,12 +12,15 @@ lazy val playLanguage = (project in file("."))
   .settings(
     majorVersion := 4,
     name := appName,
-    scalaVersion := "2.11.12",
-    crossScalaVersions := scalaVersions,
+    scalaVersion := "2.12.13",
     PlayCrossCompilation.playCrossCompilationSettings,
     libraryDependencies ++= AppDependencies.all,
-    resolvers += Resolver.typesafeRepo("releases"),
-    resolvers += Resolver.bintrayRepo("hmrc", "releases")
+    makePublicallyAvailableOnBintray := true,
+    scalacOptions += "-P:silencer:pathFilters=views",
+    libraryDependencies ++= Seq(
+        compilerPlugin("com.github.ghik" % "silencer-plugin" % silencerVersion cross CrossVersion.full),
+        "com.github.ghik" % "silencer-lib" % silencerVersion % Provided cross CrossVersion.full
+    ),
   )
   .settings(sourceDirectories in(Compile, TwirlKeys.compileTemplates) +=
     (sourceDirectory in Compile).value / "scala")
