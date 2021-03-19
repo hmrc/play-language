@@ -1,20 +1,14 @@
 # Play Language
 
-[![Apache-2.0 license](http://img.shields.io/badge/license-Apache-brightgreen.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
+This library provides an abstract language switching controller, some utilities for
+ writing Welsh dates and a (deprecated) language toggle component.
 
-[![Build Status](https://travis-ci.org/hmrc/play-language.svg)](https://travis-ci.org/hmrc/play-language) [![Download](https://api.bintray.com/packages/hmrc/releases/play-language/images/download.svg)](https://bintray.com/hmrc/releases/play-language/_latestVersion)
+If you are using [play-frontend-hmrc](https://www.github.com/hmrc/play-frontend-hmrc) component
+library, this library should not be used directly. Instead, please use the new
+[hmrcLanguageSelectHelper](https://github.com/hmrc/play-frontend-hmrc#welsh-language-selection)
+ component.
 
-Play library to provide common language support and switching functionality for Play projects.
-
-## Endpoints
-
-This library adds a new endpoint:
-
-```
- /language/:lang     - Switches the current language to the lang, if defined in languageMap.
-```
-
-## Setup
+## Setup (for play-ui users only)
 
 Add the library to the project dependencies:
 
@@ -23,7 +17,7 @@ resolvers += Resolver.bintrayRepo("hmrc", "releases")
 libraryDependencies += "uk.gov.hmrc" %% "play-language" % "[INSERT VERSION]"
 ```
 
-## Configuration - Play 2.6 and 2.7 (version 4.7.0 and higher)
+## Configuration (for play-ui users only)
 
 Create your own custom LanguageController
 
@@ -69,7 +63,7 @@ GET     /language/:lang       uk.gov.hmrc.project.controllers.CustomLanguageCont
 In order to show each language text to the user, create a `messages.xx` file within `/conf`, where xx is the language code, and put your translations within there, using the same message keys.
 
 
-#### Using play-language's `language_selection.scala.html`:
+#### Using play-language's `language_selection.scala.html`: (for play-ui users only)
 Add the following to your AppConfig trait.
 
 ``` scala
