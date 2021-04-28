@@ -18,7 +18,7 @@
 
 @(langMap: Map[String, Lang], langToCall: String => Call, customClass: Option[String] = None, appName: Option[String] = None)(implicit messages: Messages)
 
-<nav class="@if(customClass.isDefined) {@customClass.get} hmrc-language-select" aria-label="Language switcher">
+<nav class="@if(customClass.isDefined) {@customClass.get} hmrc-language-select" aria-label="@messages("language.toggle.aria.label")">
     <ul class="hmrc-language-select__list language-toggle" style="display: block;" >
     @langMap.map { case (key: String, value: Lang) =>
         @if(messages.lang.code != value.code) {
