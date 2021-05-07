@@ -16,9 +16,8 @@
 
 package uk.gov.hmrc.play.language
 
+import java.time.{LocalDate, LocalDateTime}
 import java.util.Locale
-
-import org.joda.time.{DateTime, LocalDate}
 import org.scalatest.{FlatSpec, Matchers}
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.i18n.{Lang, Messages, MessagesApi}
@@ -31,8 +30,9 @@ class LanguageUtilsSpec extends FlatSpec with Matchers with GuiceOneAppPerSuite 
   val messagesSpanish: Messages         = messagesApi.preferred(Seq(Lang(new Locale("es"))))
   val languageUtils: LanguageUtils      = app.injector.instanceOf[LanguageUtils]
 
-  val date        = new LocalDate(2015, 1, 25)
-  val dateAndTime = new DateTime(2015, 1, 25, 3, 45)
+  val date        = LocalDate.of(2015, 1, 25)
+  val oldDate     = LocalDate.of(1840, 12, 1)
+  val dateAndTime = LocalDateTime.of(2015, 1, 25, 3, 45)
 
   "Method formatDate(date: LocalDate)"                          should "return correctly formatted date in both English and Welsh" in {
     languageUtils.Dates.formatDate(date)(messagesEnglish) shouldBe "25 January 2015"
@@ -41,6 +41,10 @@ class LanguageUtilsSpec extends FlatSpec with Matchers with GuiceOneAppPerSuite 
 
   "Method formatDate(date: LocalDate)"                          should "return correctly formatted date when no language defined" in {
     languageUtils.Dates.formatDate(date)(messagesEnglish) shouldBe "25 January 2015"
+  }
+
+  "Method formatDate(date: LocalDate)"                          should "return correctly formatted date for an old date" in {
+    languageUtils.Dates.formatDate(oldDate)(messagesEnglish) shouldBe "1 December 1840"
   }
 
   "Method formatDate(date: Option[LocalDate], default: String)" should "return correctly formatted date in both English and Welsh" in {

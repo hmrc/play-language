@@ -1,4 +1,4 @@
-# Play Language
+# play-language
 
 This library provides an abstract language switching controller, some utilities for
  writing Welsh dates and a (deprecated) language toggle component.
@@ -7,6 +7,14 @@ If you are using [play-frontend-hmrc](https://www.github.com/hmrc/play-frontend-
 library, this library should not be used directly. Instead, please use the new
 [hmrcLanguageSelectHelper](https://github.com/hmrc/play-frontend-hmrc#welsh-language-selection)
  component.
+
+## LanguageUtils helpers ##
+These helpers allow for the formatting of dates, in both English and Welsh.
+
+There was an API change from version 4.x.x to 5.x.x, to remove the deprecated `joda.time` library from `play-language`.
+
+From version 5.0.0 onwards, dates should be passed in as instances of `java.time.LocalDate`, not `joda.time.LocalDate`, 
+and dates with times should be passed in as instances of `java.time.LocalDateTime`, not `joda.time.DateTime`.
 
 ## Setup (for play-ui users only)
 
