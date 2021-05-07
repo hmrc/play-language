@@ -18,10 +18,12 @@ lazy val playLanguage = (project in file("."))
     makePublicallyAvailableOnBintray := true,
     scalacOptions += "-P:silencer:pathFilters=views",
     libraryDependencies ++= Seq(
-        compilerPlugin("com.github.ghik" % "silencer-plugin" % silencerVersion cross CrossVersion.full),
-        "com.github.ghik" % "silencer-lib" % silencerVersion % Provided cross CrossVersion.full
-    ),
+      compilerPlugin("com.github.ghik" % "silencer-plugin" % silencerVersion cross CrossVersion.full),
+      "com.github.ghik" % "silencer-lib" % silencerVersion % Provided cross CrossVersion.full
+    )
   )
-  .settings(sourceDirectories in(Compile, TwirlKeys.compileTemplates) +=
-    (sourceDirectory in Compile).value / "scala")
+  .settings(
+    sourceDirectories in (Compile, TwirlKeys.compileTemplates) +=
+      (sourceDirectory in Compile).value / "scala"
+  )
   .disablePlugins(JUnitXmlReportPlugin) //Required to prevent https://github.com/scalatest/scalatest/issues/1427
