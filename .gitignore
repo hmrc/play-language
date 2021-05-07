@@ -18,3 +18,4 @@ dist
 /.settings
 *.iws
 .DS_Store
+!.scalafmt.conf

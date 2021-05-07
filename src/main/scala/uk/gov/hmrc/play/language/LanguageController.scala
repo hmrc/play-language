@@ -29,18 +29,18 @@ import scala.util.Try
   * This trait provides a means of switching the current language and redirecting the user
   * back to their original location. It expects a fallbackURL to be defined when implemented.
   * It also expects a languageMap to be defined, this provides a way of mapping strings to Lang objects.
-  *
   */
 abstract class LanguageController(languageUtils: LanguageUtils, cc: ControllerComponents)
-  extends AbstractController(cc) with I18nSupport {
+    extends AbstractController(cc)
+    with I18nSupport {
 
-  /** A URL to fallback to if there is no referrer found in the request header **/
+  /** A URL to fallback to if there is no referrer found in the request header * */
   protected def fallbackURL: String
 
-  /** A map from a String to Lang object **/
+  /** A map from a String to Lang object * */
   protected def languageMap: Map[String, Lang]
 
-  private val SwitchIndicatorKey = "switching-language"
+  private val SwitchIndicatorKey       = "switching-language"
   private val FlashWithSwitchIndicator = Flash(Map(SwitchIndicatorKey -> "true"))
 
   /**
@@ -58,27 +58,27 @@ abstract class LanguageController(languageUtils: LanguageUtils, cc: ControllerCo
     *
     * @param language - The language string to switch to.
     * @return Redirect to referrer or fallbackURL, with new language. Or fallbackURL with default lang.
-    *
     */
 
   def switchToLanguage(language: String): Action[AnyContent] = Action { implicit request =>
     val enabled: Boolean = languageMap.get(language).exists(languageUtils.isLangAvailable)
-    val lang: Lang =
+    val lang: Lang       =
       if (enabled) languageMap.getOrElse(language, languageUtils.getCurrentLang)
       else languageUtils.getCurrentLang
 
-    val redirectURL: String = request.headers.get(REFERER)
+    val redirectURL: String = request.headers
+      .get(REFERER)
       .flatMap(asRelativeUrl)
       .getOrElse(fallbackURL)
     Redirect(redirectURL).withLang(Lang.apply(lang.code)).flashing(FlashWithSwitchIndicator)
   }
 
-  private def asRelativeUrl(url:String): Option[String] =
+  private def asRelativeUrl(url: String): Option[String] =
     for {
       uri      <- Try(new URI(url)).toOption
       path     <- Option(uri.getPath).filterNot(_.isEmpty)
       query    <- Option(uri.getQuery).map("?" + _).orElse(Some(""))
       fragment <- Option(uri.getRawFragment).map("#" + _).orElse(Some(""))
-    } yield  s"$path$query$fragment"
+    } yield s"$path$query$fragment"
 
 }

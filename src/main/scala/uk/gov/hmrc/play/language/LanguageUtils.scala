@@ -32,10 +32,8 @@ import play.api.{Configuration, Play}
   * Additionally, a Dates object is provided which provides helper
   * functions to return correctly formatted dates in both English
   * and Welsh.
-  *
   */
-class LanguageUtils @Inject()(langs: Langs, configuration: Configuration)
-                             (implicit messagesApi: MessagesApi) {
+class LanguageUtils @Inject() (langs: Langs, configuration: Configuration)(implicit messagesApi: MessagesApi) {
 
   /** Returns the current language as a Lang object.
     *
@@ -59,9 +57,8 @@ class LanguageUtils @Inject()(langs: Langs, configuration: Configuration)
     * @param lang The language to check against
     * @return A boolean on wether this language is supported in the current application
     */
-  def isLangAvailable(lang: Lang): Boolean = {
+  def isLangAvailable(lang: Lang): Boolean =
     configuration.get[Seq[String]]("play.i18n.langs").exists(_.contains(lang.code))
-  }
 
   /** Filters a Map of languages against what languages are enabled in the current application
     *
@@ -72,9 +69,8 @@ class LanguageUtils @Inject()(langs: Langs, configuration: Configuration)
     * @param langMap List of all supported languages
     * @return filtered list of enabled languages
     */
-  def onlyAvailableLanguages(langMap: Map[String, Lang]): Map[String, Lang] = {
+  def onlyAvailableLanguages(langMap: Map[String, Lang]): Map[String, Lang] =
     langMap.filter(t => isLangAvailable(t._2))
-  }
 
   /** Helper object to correctly display and format dates in both English and Welsh.
     *
@@ -104,7 +100,6 @@ class LanguageUtils @Inject()(langs: Langs, configuration: Configuration)
     * - days
     *
     * These values should come from a Messages file for each language that needs to be supported.
-    *
     */
   trait Dates {
 
@@ -142,10 +137,10 @@ class LanguageUtils @Inject()(langs: Langs, configuration: Configuration)
       * @return - The SimpleDateFormat configured using the current language and pattern.
       */
     private def createDateFormatForPattern(pattern: String)(implicit messages: Messages): SimpleDateFormat = {
-      val uLocale = new ULocale(messages.lang.code)
+      val uLocale            = new ULocale(messages.lang.code)
       val validLang: Boolean = ULocale.getAvailableLocales.contains(uLocale)
-      val locale: ULocale = if (validLang) uLocale else ULocale.getDefault
-      val sdf = new SimpleDateFormat(pattern, locale)
+      val locale: ULocale    = if (validLang) uLocale else ULocale.getDefault
+      val sdf                = new SimpleDateFormat(pattern, locale)
       sdf.setTimeZone(defaultTimeZone)
       sdf
     }
@@ -184,7 +179,7 @@ class LanguageUtils @Inject()(langs: Langs, configuration: Configuration)
     def formatDate(date: Option[LocalDate], default: String)(implicit messages: Messages): String =
       date match {
         case Some(d) => formatDate(d)
-        case None => default
+        case None    => default
       }
 
     /**
@@ -200,7 +195,8 @@ class LanguageUtils @Inject()(langs: Langs, configuration: Configuration)
       * @param messages The implicit lang object.
       * @return The date as a "D MMM Y" formatted string.
       */
-    def formatDateAbbrMonth(date: LocalDate)(implicit messages: Messages): String = dateFormatAbbrMonth.format(date.toDate)
+    def formatDateAbbrMonth(date: LocalDate)(implicit messages: Messages): String =
+      dateFormatAbbrMonth.format(date.toDate)
 
     /**
       * Converts an optional DateTime object into a human readable String with the format: "h:mmaa, EEEE d MMMM yyyy"
@@ -223,7 +219,7 @@ class LanguageUtils @Inject()(langs: Langs, configuration: Configuration)
           val time = easyReadingTimestampFormat.format(d.toDate).toLowerCase
           val date = easyReadingDateFormat.format(d.toDate)
           s"$time, $date"
-        case None => default
+        case None    => default
       }
 
     /**
