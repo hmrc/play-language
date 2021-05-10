@@ -21,7 +21,7 @@ object AppDependencies {
 
   val compile: Seq[ModuleID] = PlayCrossCompilation.dependencies(
     shared = Seq(
-      "com.ibm.icu"        % "icu4j" % "68.2",
+      "com.ibm.icu"        % "icu4j" % "69.1",
       "com.typesafe.play" %% "play"  % PlayVersion.current
     ),
     play26 = Seq(

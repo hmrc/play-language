@@ -1,4 +1,5 @@
 import sbt.Keys._
+import uk.gov.hmrc.sbtsettingkeys.Keys.isPublicArtefact
 import uk.gov.hmrc.versioning.SbtGitVersioning
 import uk.gov.hmrc.versioning.SbtGitVersioning.autoImport.majorVersion
 
@@ -7,15 +8,15 @@ val appName = "play-language"
 val silencerVersion = "1.7.3"
 
 lazy val playLanguage = (project in file("."))
-  .enablePlugins(PlayScala, SbtAutoBuildPlugin, SbtGitVersioning)
+  .enablePlugins(PlayScala)
   .disablePlugins(PlayLayoutPlugin)
   .settings(
-    majorVersion := 4,
+    majorVersion := 5,
     name := appName,
     scalaVersion := "2.12.13",
     PlayCrossCompilation.playCrossCompilationSettings,
     libraryDependencies ++= AppDependencies.all,
-    makePublicallyAvailableOnBintray := true,
+    isPublicArtefact := true,
     scalacOptions += "-P:silencer:pathFilters=views",
     libraryDependencies ++= Seq(
       compilerPlugin("com.github.ghik" % "silencer-plugin" % silencerVersion cross CrossVersion.full),

@@ -9,8 +9,6 @@ val playPlugin = sys.env.getOrElse("PLAY_VERSION", "2.6") match {
 }
 
 addSbtPlugin(playPlugin)
-addSbtPlugin("uk.gov.hmrc"   % "sbt-auto-build"             % "2.13.0")
-addSbtPlugin("uk.gov.hmrc"   % "sbt-git-versioning"         % "2.2.0")
+addSbtPlugin("uk.gov.hmrc"   % "sbt-auto-build"             % "3.0.0")
 addSbtPlugin("uk.gov.hmrc"   % "sbt-play-cross-compilation" % "2.0.0")
-addSbtPlugin("uk.gov.hmrc"   % "sbt-artifactory"            % "1.13.0")
 addSbtPlugin("org.scalameta" % "sbt-scalafmt"               % "2.4.0")

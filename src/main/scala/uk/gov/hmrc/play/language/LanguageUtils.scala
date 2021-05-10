@@ -18,8 +18,8 @@ package uk.gov.hmrc.play.language
 
 import com.ibm.icu.text.SimpleDateFormat
 import com.ibm.icu.util.{TimeZone, ULocale}
+import java.time.{LocalDate, LocalDateTime, ZoneId}
 import javax.inject.Inject
-import org.joda.time.{DateTime, LocalDate}
 import play.api.i18n.{Lang, Langs, Messages, MessagesApi}
 import play.api.mvc._
 import play.api.{Configuration, Play}
@@ -115,6 +115,9 @@ class LanguageUtils @Inject() (langs: Langs, configuration: Configuration)(impli
     /** The value of the plural of the word 'day' * */
     def plural(implicit messages: Messages): String
 
+    /** The java.time.ZoneId of the com.ibm.icu.util.TimeZone */
+    private val zoneId: ZoneId = ZoneId.of(defaultTimeZone.getID)
+
     /** Helper methods to format dates using various patterns * */
     private def dateFormat(implicit messages: Messages) = createDateFormatForPattern("d MMMM y")
 
@@ -146,7 +149,7 @@ class LanguageUtils @Inject() (langs: Langs, configuration: Configuration)(impli
     }
 
     /**
-      * Converts a LocalDate object into a String with the format "D MMMM Y".
+      * Converts a java.time.LocalDate object into a String with the format "D MMMM Y".
       *
       * This function will return a translated string based on the implicit lang object
       * that is passed through with it.
@@ -154,14 +157,14 @@ class LanguageUtils @Inject() (langs: Langs, configuration: Configuration)(impli
       * Lang("en") example: 25 January 2015
       * Lang("cy") example: 25 Ionawr 2015
       *
-      * @param date     The LocalDate object to convert.
+      * @param date     The java.time.LocalDate object to convert.
       * @param messages The implicit lang object.
       * @return The date as a "D MMMM Y" formatted string.
       */
-    def formatDate(date: LocalDate)(implicit messages: Messages): String = dateFormat.format(date.toDate)
+    def formatDate(date: LocalDate)(implicit messages: Messages): String = dateFormat.format(toMilli(date))
 
     /**
-      * Converts an Option LocalDate object into a String with the format "D MMMM Y"
+      * Converts an Option java.time.LocalDate object into a String with the format "D MMMM Y"
       *
       * This function will return a translated string based on the implicit lang object
       * that is passed through with it. If the option is None then the default value is
@@ -171,7 +174,7 @@ class LanguageUtils @Inject() (langs: Langs, configuration: Configuration)(impli
       * Lang("cy") example: 25 Ionawr 2015
       * None example: default
       *
-      * @param date     The Optional LocalDate object to convert.
+      * @param date     The Optional java.time.LocalDate object to convert.
       * @param default  A default value to return if the date option is not set.
       * @param messages The implicit lang object.
       * @return Either the date as a "D MMMM Y" formatted string or the default value if not set.
@@ -183,7 +186,7 @@ class LanguageUtils @Inject() (langs: Langs, configuration: Configuration)(impli
       }
 
     /**
-      * Converts a LocalDate object into a human readable String with the format "D MMM Y"
+      * Converts a java.time.LocalDate object into a human readable String with the format "D MMM Y"
       *
       * This function will return a translated string based on the implicit lang object
       * that is passed through with it.
@@ -191,12 +194,12 @@ class LanguageUtils @Inject() (langs: Langs, configuration: Configuration)(impli
       * Lang("en") example: 25 Jan 2015
       * Lang("cy") example: 25 Ion 2015
       *
-      * @param date     The LocalDate object to convert.
+      * @param date     The java.time.LocalDate object to convert.
       * @param messages The implicit lang object.
       * @return The date as a "D MMM Y" formatted string.
       */
     def formatDateAbbrMonth(date: LocalDate)(implicit messages: Messages): String =
-      dateFormatAbbrMonth.format(date.toDate)
+      dateFormatAbbrMonth.format(toMilli(date))
 
     /**
       * Converts an optional DateTime object into a human readable String with the format: "h:mmaa, EEEE d MMMM yyyy"
@@ -208,22 +211,22 @@ class LanguageUtils @Inject() (langs: Langs, configuration: Configuration)(impli
       * Lang("en") example: "3:45am, Sunday 25 January 2015"
       * Lang("cy" example: "3:45am, Dydd Sul 25 Ionawr 2015"
       *
-      * @param date     The optional DateTime object to convert.
+      * @param date     The optional java.time.LocalDateTime object to convert.
       * @param default  The default value to return if the date is missing.
       * @param messages The implicit lang object.
       * @return The date and time as a "h:mmaa, EEEE d MMMM yyyy" formatted string.
       */
-    def formatEasyReadingTimestamp(date: Option[DateTime], default: String)(implicit messages: Messages): String =
+    def formatEasyReadingTimestamp(date: Option[LocalDateTime], default: String)(implicit messages: Messages): String =
       date match {
         case Some(d) =>
-          val time = easyReadingTimestampFormat.format(d.toDate).toLowerCase
-          val date = easyReadingDateFormat.format(d.toDate)
+          val time = easyReadingTimestampFormat.format(toMilli(d)).toLowerCase
+          val date = easyReadingDateFormat.format(toMilli(d))
           s"$time, $date"
         case None    => default
       }
 
     /**
-      * Converts a LocalDate object into a human readable String with the format: "yyyy-MM-dd"
+      * Converts a java.time.LocalDate object into a human readable String with the format: "yyyy-MM-dd"
       *
       * This function will return a translated string based on the implicit lang object
       * that is passed through with it.
@@ -231,14 +234,14 @@ class LanguageUtils @Inject() (langs: Langs, configuration: Configuration)(impli
       * Lang("en") example: 2015-01-25
       * Lang("cy") example: 2015-01-25
       *
-      * @param date     - The LocalDate object to be converted.
+      * @param date     - The java.time.LocalDate object to be converted.
       * @param messages - The implicit language object.
       * @return The date as a "yyyy-MM-dd" formatted string.
       */
-    def shortDate(date: LocalDate)(implicit messages: Messages): String = shortDateFormat.format(date.toDate)
+    def shortDate(date: LocalDate)(implicit messages: Messages): String = shortDateFormat.format(toMilli(date))
 
     /**
-      * Converts two LocalDate objects into a human readable String to show a date range.
+      * Converts two java.time.LocalDate objects into a human readable String to show a date range.
       *
       * This function will return a translated string based on the implicit lang object.
       *
@@ -271,6 +274,12 @@ class LanguageUtils @Inject() (langs: Langs, configuration: Configuration)(impli
       val dayOrDays = if (numberOfDays == 1) singular else plural
       s"$numberOfDays $dayOrDays"
     }
+
+    private def toMilli(localDate: LocalDate): Long =
+      localDate.atStartOfDay(zoneId).toInstant.toEpochMilli
+
+    private def toMilli(localDateTime: LocalDateTime): Long =
+      localDateTime.atZone(zoneId).toInstant.toEpochMilli
   }
 
 }
