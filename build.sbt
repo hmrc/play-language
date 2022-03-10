@@ -8,6 +8,7 @@ val silencerVersion = "1.7.7"
 lazy val playLanguage = (project in file("."))
   .enablePlugins(PlayScala)
   .disablePlugins(PlayLayoutPlugin)
+  .disablePlugins(JUnitXmlReportPlugin) //Required to prevent https://github.com/scalatest/scalatest/issues/1427
   .settings(
     majorVersion := 5,
     name := "play-language",
@@ -23,7 +24,6 @@ lazy val playLanguage = (project in file("."))
     )
   )
   .settings(
-    sourceDirectories in (Compile, TwirlKeys.compileTemplates) +=
-      (sourceDirectory in Compile).value / "scala"
+    Compile / TwirlKeys.compileTemplates / sourceDirectories +=
+      (Compile / sourceDirectory).value / "scala"
   )
-  .disablePlugins(JUnitXmlReportPlugin) //Required to prevent https://github.com/scalatest/scalatest/issues/1427

@@ -21,3 +21,5 @@ dist
 !.scalafmt.conf
 .metals/
 .vscode/
+.bloop/
+project/metals.sbt

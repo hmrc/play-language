@@ -22,7 +22,7 @@ import java.time.{LocalDate, LocalDateTime, ZoneId}
 import javax.inject.Inject
 import play.api.i18n.{Lang, Langs, Messages, MessagesApi}
 import play.api.mvc._
-import play.api.{Configuration, Play}
+import play.api.Configuration
 
 /** This object provides access to common language utilities.
   *
@@ -47,7 +47,7 @@ class LanguageUtils @Inject() (langs: Langs, configuration: Configuration)(impli
     * @return Lang object containing the current langugage.
     */
   def getCurrentLang(implicit request: RequestHeader): Lang = {
-    val maybeLangFromCookie = request.cookies.get(Play.langCookieName).flatMap(c => Lang.get(c.value))
+    val maybeLangFromCookie = request.cookies.get(messagesApi.langCookieName).flatMap(c => Lang.get(c.value))
 
     maybeLangFromCookie.getOrElse(langs.preferred(request.acceptLanguages))
   }

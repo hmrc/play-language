@@ -18,11 +18,12 @@ package uk.gov.hmrc.play.language
 
 import java.time.{LocalDate, LocalDateTime}
 import java.util.Locale
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.i18n.{Lang, Messages, MessagesApi}
 
-class LanguageUtilsSpec extends FlatSpec with Matchers with GuiceOneAppPerSuite {
+class LanguageUtilsSpec extends AnyFlatSpec with Matchers with GuiceOneAppPerSuite {
 
   implicit val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
   val messagesEnglish: Messages         = messagesApi.preferred(Seq(Lang(new Locale("en"))))
