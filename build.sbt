@@ -1,19 +1,18 @@
 import sbt.Keys._
-import uk.gov.hmrc.sbtsettingkeys.Keys.isPublicArtefact
-import uk.gov.hmrc.versioning.SbtGitVersioning
-import uk.gov.hmrc.versioning.SbtGitVersioning.autoImport.majorVersion
 
-val appName = "play-language"
+val scala2_12 = "2.12.15"
+val scala2_13 = "2.13.7"
 
-val silencerVersion = "1.7.3"
+val silencerVersion = "1.7.7"
 
 lazy val playLanguage = (project in file("."))
   .enablePlugins(PlayScala)
   .disablePlugins(PlayLayoutPlugin)
   .settings(
     majorVersion := 5,
-    name := appName,
-    scalaVersion := "2.12.13",
+    name := "play-language",
+    scalaVersion := scala2_12,
+    crossScalaVersions := Seq(scala2_12, scala2_13),
     PlayCrossCompilation.playCrossCompilationSettings,
     libraryDependencies ++= AppDependencies.all,
     isPublicArtefact := true,

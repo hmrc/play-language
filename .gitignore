@@ -19,3 +19,5 @@ dist
 *.iws
 .DS_Store
 !.scalafmt.conf
+.metals/
+.vscode/

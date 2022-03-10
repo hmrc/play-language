@@ -24,22 +24,16 @@ object AppDependencies {
       "com.ibm.icu"        % "icu4j" % "69.1",
       "com.typesafe.play" %% "play"  % PlayVersion.current
     ),
-    play26 = Seq(
-      "uk.gov.hmrc" %% "url-builder" % "3.5.0-play-26"
-    ),
-    play27 = Seq(
-      "uk.gov.hmrc" %% "url-builder" % "3.5.0-play-27"
-    ),
     play28 = Seq(
-      "uk.gov.hmrc" %% "url-builder" % "3.5.0-play-28"
+      "uk.gov.hmrc" %% "url-builder" % "3.6.0-play-28"
     )
   )
 
   val test: Seq[ModuleID] = PlayCrossCompilation.dependencies(
-    shared = Seq("org.pegdown" % "pegdown" % "1.6.0" % Test),
-    play26 = Seq("org.scalatestplus.play" %% "scalatestplus-play" % "3.1.2" % Test),
-    play27 = Seq("org.scalatestplus.play" %% "scalatestplus-play" % "4.0.3" % Test),
-    play28 = Seq("org.scalatestplus.play" %% "scalatestplus-play" % "5.0.0" % Test)
+    play28 = Seq(
+      "org.scalatestplus.play" %% "scalatestplus-play" % "5.1.0"   % Test,
+      "com.vladsch.flexmark"    % "flexmark-all"       % "0.35.10" % Test
+    )
   )
 
   val all: Seq[ModuleID] = compile ++ test
