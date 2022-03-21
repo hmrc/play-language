@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,6 @@ package uk.gov.hmrc.play.language
 
 import com.google.inject.Inject
 import org.scalatestplus.play.PlaySpec
-import play.api.Play
 import play.api.i18n.{Lang, MessagesApi}
 import play.api.mvc.{ControllerComponents, Cookie}
 import play.api.test.Helpers._
@@ -57,7 +56,7 @@ class LanguageControllerSpec extends PlaySpec with PlayRunners {
         val sut                               = app.injector.instanceOf[TestLanguageController]
         implicit val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
         val res                               = sut.switchToLanguage("cymraeg")(FakeRequest())
-        cookies(res).get(Play.langCookieName) match {
+        cookies(res).get(messagesApi.langCookieName) match {
           case Some(c: Cookie) => c.value.mustBe(WelshLangCode)
           case _               => fail("PLAY_LANG cookie was not cy")
         }
@@ -88,7 +87,7 @@ class LanguageControllerSpec extends PlaySpec with PlayRunners {
         val sut                               = app.injector.instanceOf[TestLanguageController]
         implicit val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
         val res                               = sut.switchToLanguage("english")(FakeRequest())
-        cookies(res).get(Play.langCookieName) match {
+        cookies(res).get(messagesApi.langCookieName) match {
           case Some(c: Cookie) => c.value must be(EnglishLangCode)
           case _               => fail("PLAY_LANG cookie was not found.")
         }
