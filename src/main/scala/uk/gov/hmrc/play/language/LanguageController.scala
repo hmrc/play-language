@@ -76,8 +76,8 @@ abstract class LanguageController(languageUtils: LanguageUtils, cc: ControllerCo
   private def asRelativeUrl(url: String): Option[String] =
     for {
       uri      <- Try(new URI(url)).toOption
-      path     <- Option(uri.getPath).filterNot(_.isEmpty)
-      query    <- Option(uri.getQuery).map("?" + _).orElse(Some(""))
+      path     <- Option(uri.getRawPath).filterNot(_.isEmpty)
+      query    <- Option(uri.getRawQuery).map("?" + _).orElse(Some(""))
       fragment <- Option(uri.getRawFragment).map("#" + _).orElse(Some(""))
     } yield s"$path$query$fragment"
 
