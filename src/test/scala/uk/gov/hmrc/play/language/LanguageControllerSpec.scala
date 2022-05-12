@@ -143,6 +143,18 @@ class LanguageControllerSpec extends PlaySpec with PlayRunners {
         redirectLocation(res) must be(Some("/path?a=b#foo"))
       }
     }
+
+    "url encode all parts of the url in location header" in {
+      running() { app =>
+        val sut     = app.injector.instanceOf[TestLanguageController]
+        val request = FakeRequest().withHeaders(
+          REFERER -> s"https://www.tax.service.gov.uk/path%20with%20space?query=%C2%A320#%C2%A320"
+        )
+        val res     = sut.switchToLanguage("english")(request)
+        status(res)           must be(SEE_OTHER)
+        redirectLocation(res) must be(Some("/path%20with%20space?query=%C2%A320#%C2%A320"))
+      }
+    }
   }
 
 }
