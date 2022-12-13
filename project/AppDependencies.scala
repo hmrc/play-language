@@ -23,9 +23,6 @@ object AppDependencies {
     shared = Seq(
       "com.ibm.icu"        % "icu4j" % "69.1",
       "com.typesafe.play" %% "play"  % PlayVersion.current
-    ),
-    play28 = Seq(
-      "uk.gov.hmrc" %% "url-builder" % "3.6.0-play-28"
     )
   )
 

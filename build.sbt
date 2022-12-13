@@ -10,7 +10,7 @@ lazy val playLanguage = (project in file("."))
   .disablePlugins(PlayLayoutPlugin)
   .disablePlugins(JUnitXmlReportPlugin) //Required to prevent https://github.com/scalatest/scalatest/issues/1427
   .settings(
-    majorVersion := 5,
+    majorVersion := 6,
     name := "play-language",
     scalaVersion := scala2_12,
     crossScalaVersions := Seq(scala2_12, scala2_13),

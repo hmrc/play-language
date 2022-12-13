@@ -91,6 +91,12 @@ class LanguageSelectionSpec extends PlaySpec with GuiceOneAppPerSuite {
       contentAsString(html) must include("data-journey-click=\"appName:language: cy\"")
     }
 
+    "not show a data-journey-click attribute if appName is not set" in {
+      val html = views.html.language_selection.render(languageMap, langToUrl, None, None, messagesEnglish)
+      contentType(html)     must be("text/html")
+      contentAsString(html) must not include "data-journey-click"
+    }
+
     "show correct current language message when current language is Spanish" in {
       val Spanish = Lang("es")
 
