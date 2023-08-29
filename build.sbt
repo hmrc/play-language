@@ -1,29 +1,67 @@
 import sbt.Keys._
+import scala.collection.JavaConverters._
 
-val scala2_12 = "2.12.15"
-val scala2_13 = "2.13.7"
+val scala2_12 = "2.12.18"
+val scala2_13 = "2.13.12"
 
-val silencerVersion = "1.7.7"
+ThisBuild / majorVersion     := 6
+ThisBuild / isPublicArtefact := true
+ThisBuild / scalaVersion     := scala2_13
+ThisBuild / scalacOptions    += "-Wconf:src=views/.*:s"
+ThisBuild / libraryDependencySchemes += "org.scala-lang.modules" %% "scala-xml" % VersionScheme.Always // required since we're cross building for Play 2.8 which isn't compatible with sbt 1.9
 
-lazy val playLanguage = (project in file("."))
-  .enablePlugins(PlayScala)
-  .disablePlugins(PlayLayoutPlugin)
+lazy val library = (project in file("."))
+  .settings(publish / skip := true)
+  .aggregate(
+    /*sys.env.get("PLAY_VERSION") match {
+      case Some("2.9") => playLanguagePlay29
+      case _ /*Some("2.8")*/ => playLanguagePlay28
+    }*/
+    playLanguagePlay28,
+    playLanguagePlay29
+  )
+
+val sharedSources = Seq(
+  Compile         / unmanagedSourceDirectories   += baseDirectory.value / s"../src-common/main/scala",
+  Compile         / unmanagedResourceDirectories += baseDirectory.value / s"../src-common/main/resources",
+  Test            / unmanagedSourceDirectories   += baseDirectory.value / s"../src-common/test/scala",
+  Test            / unmanagedResourceDirectories += baseDirectory.value / s"../src-common/test/resources"
+)
+
+lazy val playLanguagePlay28 = Project("play-language-play-28", file("play-language-play-28"))
+  .enablePlugins(SbtTwirl) // previously used play sbt-plugin and enabled PlayScala and disabled PlayLayout - this was overkill to add templateImports, and added lots of unnecessary dependencies to created binary (incl. Main-Class config in Manifest)
   .disablePlugins(JUnitXmlReportPlugin) //Required to prevent https://github.com/scalatest/scalatest/issues/1427
   .settings(
-    majorVersion := 6,
-    name := "play-language",
-    scalaVersion := scala2_12,
     crossScalaVersions := Seq(scala2_12, scala2_13),
-    PlayCrossCompilation.playCrossCompilationSettings,
-    libraryDependencies ++= AppDependencies.all,
-    isPublicArtefact := true,
-    scalacOptions += "-P:silencer:pathFilters=views",
-    libraryDependencies ++= Seq(
-      compilerPlugin("com.github.ghik" % "silencer-plugin" % silencerVersion cross CrossVersion.full),
-      "com.github.ghik" % "silencer-lib" % silencerVersion % Provided cross CrossVersion.full
-    )
+    libraryDependencies ++= AppDependencies.shared ++ AppDependencies.play28,
+    sharedSources
   )
   .settings(
-    Compile / TwirlKeys.compileTemplates / sourceDirectories +=
-      (Compile / sourceDirectory).value / "scala"
+    Compile / TwirlKeys.compileTemplates / sourceDirectories ++=
+      (Compile / unmanagedSourceDirectories).value,
+//    TwirlKeys.templateImports ++= play.TemplateImports.defaultScalaTemplateImports.asScala
+    TwirlKeys.templateImports ++= Seq(
+      "play.api.mvc._",
+      "play.api.data._",
+      "play.api.i18n._"
+    )
+  )
+
+lazy val playLanguagePlay29 = Project("play-language-play-29", file("play-language-play-29"))
+  .enablePlugins(SbtTwirl)
+  .disablePlugins(JUnitXmlReportPlugin) //Required to prevent https://github.com/scalatest/scalatest/issues/1427
+  .settings(
+    crossScalaVersions := Seq(scala2_13),
+    libraryDependencies ++= AppDependencies.shared ++ AppDependencies.play29,
+    sharedSources
+  )
+  .settings(
+    Compile / TwirlKeys.compileTemplates / sourceDirectories ++=
+      (Compile / unmanagedSourceDirectories).value,
+    //TwirlKeys.templateImports ++= play.TemplateImports.defaultScalaTemplateImports.asScala
+    TwirlKeys.templateImports ++= Seq(
+      "play.api.mvc._",
+      "play.api.data._",
+      "play.api.i18n._"
+    )
   )

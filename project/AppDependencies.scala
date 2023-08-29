@@ -15,23 +15,22 @@
  */
 
 import sbt._
-import play.core.PlayVersion
 
 object AppDependencies {
 
-  val compile: Seq[ModuleID] = PlayCrossCompilation.dependencies(
-    shared = Seq(
-      "com.ibm.icu"        % "icu4j" % "69.1",
-      "com.typesafe.play" %% "play"  % PlayVersion.current
-    )
+  val shared = Seq(
+    "com.ibm.icu"        % "icu4j" % "69.1"
   )
 
-  val test: Seq[ModuleID] = PlayCrossCompilation.dependencies(
-    play28 = Seq(
-      "org.scalatestplus.play" %% "scalatestplus-play" % "5.1.0"   % Test,
-      "com.vladsch.flexmark"    % "flexmark-all"       % "0.35.10" % Test
-    )
+  val play28 = Seq(
+    "com.typesafe.play"      %% "play"               % "2.8.20",
+    "org.scalatestplus.play" %% "scalatestplus-play" % "5.1.0"   % Test,
+    "com.vladsch.flexmark"   %  "flexmark-all"       % "0.35.10" % Test
   )
 
-  val all: Seq[ModuleID] = compile ++ test
+  val play29 = Seq(
+    "com.typesafe.play"      %% "play"               % "2.9.0-M7",
+    "org.scalatestplus.play" %% "scalatestplus-play" % "6.0.0-M6" % Test,
+    "com.vladsch.flexmark"   %  "flexmark-all"       % "0.62.2"   % Test
+  )
 }
