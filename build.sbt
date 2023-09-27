@@ -13,12 +13,10 @@ ThisBuild / libraryDependencySchemes += "org.scala-lang.modules" %% "scala-xml" 
 lazy val library = (project in file("."))
   .settings(publish / skip := true)
   .aggregate(
-    /*sys.env.get("PLAY_VERSION") match {
-      case Some("2.9") => playLanguagePlay29
-      case _ /*Some("2.8")*/ => playLanguagePlay28
-    }*/
-    playLanguagePlay28,
-    playLanguagePlay29
+    sys.env.get("PLAY_VERSION") match {
+      case Some("2.8") => playLanguagePlay28
+      case _           => playLanguagePlay29
+    }
   )
 
 val sharedSources = Seq(
@@ -39,7 +37,6 @@ lazy val playLanguagePlay28 = Project("play-language-play-28", file("play-langua
   .settings(
     Compile / TwirlKeys.compileTemplates / sourceDirectories ++=
       (Compile / unmanagedSourceDirectories).value,
-//    TwirlKeys.templateImports ++= play.TemplateImports.defaultScalaTemplateImports.asScala
     TwirlKeys.templateImports ++= Seq(
       "play.api.mvc._",
       "play.api.data._",
@@ -58,7 +55,6 @@ lazy val playLanguagePlay29 = Project("play-language-play-29", file("play-langua
   .settings(
     Compile / TwirlKeys.compileTemplates / sourceDirectories ++=
       (Compile / unmanagedSourceDirectories).value,
-    //TwirlKeys.templateImports ++= play.TemplateImports.defaultScalaTemplateImports.asScala
     TwirlKeys.templateImports ++= Seq(
       "play.api.mvc._",
       "play.api.data._",
