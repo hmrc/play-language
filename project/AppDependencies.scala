@@ -29,8 +29,8 @@ object AppDependencies {
   )
 
   val play29 = Seq(
-    "com.typesafe.play"      %% "play"               % "2.9.0-M7",
-    "org.scalatestplus.play" %% "scalatestplus-play" % "6.0.0-M6" % Test,
-    "com.vladsch.flexmark"   %  "flexmark-all"       % "0.62.2"   % Test
+    "com.typesafe.play"      %% "play"               % "2.9.0",
+    "org.scalatestplus.play" %% "scalatestplus-play" % "6.0.0"   % Test,
+    "com.vladsch.flexmark"   %  "flexmark-all"       % "0.64.8"  % Test
   )
 }
