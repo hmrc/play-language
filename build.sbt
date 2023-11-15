@@ -13,7 +13,8 @@ ThisBuild / libraryDependencySchemes += "org.scala-lang.modules" %% "scala-xml" 
 lazy val projects: Seq[ProjectReference] =
   sys.env.get("PLAY_VERSION") match {
     case Some("2.8") => Seq(playLanguage, playLanguagePlay28)
-    case _           => Seq(playLanguagePlay29)
+    case Some("2.9") => Seq(playLanguagePlay29)
+    case _           => Seq(playLanguagePlay30)
   }
 
 lazy val library = (project in file("."))
@@ -40,7 +41,7 @@ lazy val playLanguagePlay28 = Project("play-language-play-28", file("play-langua
   .disablePlugins(JUnitXmlReportPlugin) //Required to prevent https://github.com/scalatest/scalatest/issues/1427
   .settings(
     crossScalaVersions := Seq(scala2_12, scala2_13),
-    libraryDependencies ++= AppDependencies.shared ++ AppDependencies.play28,
+    libraryDependencies ++= AppDependencies.play28,
     sharedSources
   )
   .settings(
@@ -59,7 +60,25 @@ lazy val playLanguagePlay29 = Project("play-language-play-29", file("play-langua
   .disablePlugins(JUnitXmlReportPlugin) //Required to prevent https://github.com/scalatest/scalatest/issues/1427
   .settings(
     crossScalaVersions := Seq(scala2_13),
-    libraryDependencies ++= AppDependencies.shared ++ AppDependencies.play29,
+    libraryDependencies ++= AppDependencies.play29,
+    sharedSources
+  )
+  .settings(
+    Compile / TwirlKeys.compileTemplates / sourceDirectories ++=
+      (Compile / unmanagedSourceDirectories).value,
+    TwirlKeys.templateImports ++= Seq(
+      "play.api.mvc._",
+      "play.api.data._",
+      "play.api.i18n._"
+    )
+  )
+
+lazy val playLanguagePlay30 = Project("play-language-play-30", file("play-language-play-30"))
+  .enablePlugins(SbtTwirl)
+  .disablePlugins(JUnitXmlReportPlugin) //Required to prevent https://github.com/scalatest/scalatest/issues/1427
+  .settings(
+    crossScalaVersions := Seq(scala2_13),
+    libraryDependencies ++= AppDependencies.play30,
     sharedSources
   )
   .settings(

@@ -18,19 +18,42 @@ import sbt._
 
 object AppDependencies {
 
-  val shared = Seq(
-    "com.ibm.icu"        % "icu4j" % "69.1"
+  val play28 = play("play-28")
+  val play29 = play("play-29")
+  val play30 = play("play-30")
+
+  private def play(playSuffix: String) = Seq(
+    "com.ibm.icu"            %  "icu4j"              % "69.1",
+    playOrg(playSuffix)      %% "play"               % playVersion(playSuffix),
+    "org.scalatestplus.play" %% "scalatestplus-play" % scalaTestPlusPlayVersion(playSuffix) % Test,
+    "com.vladsch.flexmark"   %  "flexmark-all"       % flexmarkAllVersion(playSuffix)       % Test
   )
 
-  val play28 = Seq(
-    "com.typesafe.play"      %% "play"               % "2.8.20",
-    "org.scalatestplus.play" %% "scalatestplus-play" % "5.1.0"   % Test,
-    "com.vladsch.flexmark"   %  "flexmark-all"       % "0.35.10" % Test
-  )
+  private def playVersion(playSuffix: String) =
+    playSuffix match {
+      case "play-28" => "2.8.20"
+      case "play-29" => "2.9.0"
+      case "play-30" => "3.0.0"
+    }
 
-  val play29 = Seq(
-    "com.typesafe.play"      %% "play"               % "2.9.0",
-    "org.scalatestplus.play" %% "scalatestplus-play" % "6.0.0"   % Test,
-    "com.vladsch.flexmark"   %  "flexmark-all"       % "0.64.8"  % Test
-  )
+  private def playOrg(playSuffix: String): String =
+    playSuffix match {
+      case "play-28" => "com.typesafe.play"
+      case "play-29" => "com.typesafe.play"
+      case "play-30" => "org.playframework"
+    }
+
+  private def scalaTestPlusPlayVersion(playSuffix: String): String =
+    playSuffix match {
+      case "play-28" => "5.1.0"
+      case "play-29" => "6.0.0"
+      case "play-30" => "7.0.0"
+    }
+
+  private def flexmarkAllVersion(playSuffix: String): String =
+    playSuffix match {
+      case "play-28" => "0.36.8"
+      case "play-29" => "0.64.8"
+      case "play-30" => "0.64.8"
+    }
 }

@@ -13,6 +13,7 @@ sys.env.get("PLAY_VERSION") match {
 }
 
 sys.env.get("PLAY_VERSION") match {
-  case Some("2.8") => addSbtPlugin("com.typesafe.sbt"  % "sbt-twirl"  % "1.5.1")
-  case _           => addSbtPlugin("com.typesafe.play" % "sbt-twirl"  % "1.6.1")
+  case Some("2.8") => addSbtPlugin("com.typesafe.sbt"        % "sbt-twirl"  % "1.5.1")
+  case Some("2.9") => addSbtPlugin("com.typesafe.play"       % "sbt-twirl"  % "1.6.1")
+  case _           => addSbtPlugin("org.playframework.twirl" % "sbt-twirl"  % "2.0.1")
 }
