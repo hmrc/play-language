@@ -27,11 +27,11 @@ lazy val library = (project in file("."))
 lazy val playLanguage = Project("play-language", file("play-language"))
   .settings(crossScalaVersions := Seq(scala2_12, scala2_13))
 
-val sharedSources = Seq(
-  Compile / unmanagedSourceDirectories += baseDirectory.value / s"../src-common/main/scala",
-  Compile / unmanagedResourceDirectories += baseDirectory.value / s"../src-common/main/resources",
-  Test / unmanagedSourceDirectories += baseDirectory.value / s"../src-common/test/scala",
-  Test / unmanagedResourceDirectories += baseDirectory.value / s"../src-common/test/resources"
+def copySources(module: Project) = Seq(
+  Compile / scalaSource       := (module / Compile / scalaSource      ).value,
+  Compile / resourceDirectory := (module / Compile / resourceDirectory).value,
+  Test    / scalaSource       := (module / Test    / scalaSource      ).value,
+  Test    / resourceDirectory := (module / Test    / resourceDirectory).value
 )
 
 lazy val playLanguagePlay28 = Project("play-language-play-28", file("play-language-play-28"))
@@ -39,10 +39,10 @@ lazy val playLanguagePlay28 = Project("play-language-play-28", file("play-langua
     SbtTwirl
   ) // previously used play sbt-plugin and enabled PlayScala and disabled PlayLayout - this was overkill to add templateImports, and added lots of unnecessary dependencies to created binary (incl. Main-Class config in Manifest)
   .disablePlugins(JUnitXmlReportPlugin) //Required to prevent https://github.com/scalatest/scalatest/issues/1427
+  .settings(copySources(playLanguagePlay30))
   .settings(
     crossScalaVersions := Seq(scala2_12, scala2_13),
-    libraryDependencies ++= AppDependencies.play28,
-    sharedSources
+    libraryDependencies ++= AppDependencies.play28
   )
   .settings(
     Compile / TwirlKeys.compileTemplates / sourceDirectories ++=
@@ -58,10 +58,10 @@ lazy val playLanguagePlay28 = Project("play-language-play-28", file("play-langua
 lazy val playLanguagePlay29 = Project("play-language-play-29", file("play-language-play-29"))
   .enablePlugins(SbtTwirl)
   .disablePlugins(JUnitXmlReportPlugin) //Required to prevent https://github.com/scalatest/scalatest/issues/1427
+  .settings(copySources(playLanguagePlay30))
   .settings(
     crossScalaVersions := Seq(scala2_13),
-    libraryDependencies ++= AppDependencies.play29,
-    sharedSources
+    libraryDependencies ++= AppDependencies.play29
   )
   .settings(
     Compile / TwirlKeys.compileTemplates / sourceDirectories ++=
@@ -78,8 +78,7 @@ lazy val playLanguagePlay30 = Project("play-language-play-30", file("play-langua
   .disablePlugins(JUnitXmlReportPlugin) //Required to prevent https://github.com/scalatest/scalatest/issues/1427
   .settings(
     crossScalaVersions := Seq(scala2_13),
-    libraryDependencies ++= AppDependencies.play30,
-    sharedSources
+    libraryDependencies ++= AppDependencies.play30
   )
   .settings(
     Compile / TwirlKeys.compileTemplates / sourceDirectories ++=
