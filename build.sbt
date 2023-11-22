@@ -28,10 +28,10 @@ lazy val playLanguage = Project("play-language", file("play-language"))
   .settings(crossScalaVersions := Seq(scala2_12, scala2_13))
 
 def copySources(module: Project) = Seq(
-  Compile / scalaSource       := (module / Compile / scalaSource      ).value,
+  Compile / scalaSource := (module / Compile / scalaSource).value,
   Compile / resourceDirectory := (module / Compile / resourceDirectory).value,
-  Test    / scalaSource       := (module / Test    / scalaSource      ).value,
-  Test    / resourceDirectory := (module / Test    / resourceDirectory).value
+  Test / scalaSource := (module / Test / scalaSource).value,
+  Test / resourceDirectory := (module / Test / resourceDirectory).value
 )
 
 lazy val playLanguagePlay28 = Project("play-language-play-28", file("play-language-play-28"))
