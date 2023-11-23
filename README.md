@@ -13,7 +13,7 @@ These helpers allow for the formatting of dates, in both English and Welsh.
 
 There was an API change from version 4.x.x to 5.x.x, to remove the deprecated `joda.time` library from `play-language`.
 
-From version 5.0.0 onwards, dates should be passed in as instances of `java.time.LocalDate`, not `joda.time.LocalDate`, 
+From version 5.0.0 onwards, dates should be passed in as instances of `java.time.LocalDate`, not `joda.time.LocalDate`,
 and dates with times should be passed in as instances of `java.time.LocalDateTime`, not `joda.time.DateTime`.
 
 ## Setup (for play-ui users only)
@@ -21,8 +21,10 @@ and dates with times should be passed in as instances of `java.time.LocalDateTim
 Add the library to the project dependencies:
 
 ``` scala
-libraryDependencies += "uk.gov.hmrc" %% "play-language" % "[INSERT VERSION]"
+libraryDependencies += "uk.gov.hmrc" %% "play-language-play-xx" % "[INSERT VERSION]"
 ```
+
+Where play-xx is your version of Play (e.g. play-29).
 
 Ensure to add the resolvers to your `plugins.sbt`:
 
@@ -55,10 +57,10 @@ class CustomLanguageController @Inject()(
     if (appConfig.welshLanguageSupportEnabled) Map(en -> Lang(en), cy -> Lang(cy))
     else Map(en -> Lang(en))
   }
-  
+
   override def fallbackURL: String =
     "https://www.gov.uk/government/organisations/hm-revenue-customs"
-                      
+
 }
 ```
 
@@ -120,7 +122,7 @@ class AppConfig @Inject()(languageUtils: LanguageUtils) {
 
 #### Using [govuk-template]("https://github.com/hmrc/govuk-template"):
 Pass the following arguments to your template renderer
-``` scala 
+``` scala
 "langSelector" -> {
   Map(
     "enUrl" -> controllers.routes.CustomLanguageController.switchToLanguage("english"),
@@ -132,5 +134,5 @@ Pass the following arguments to your template renderer
 ```
 
 ## License ##
- 
+
 This code is open source software licensed under the [Apache 2.0 License]("http://www.apache.org/licenses/LICENSE-2.0.html").
