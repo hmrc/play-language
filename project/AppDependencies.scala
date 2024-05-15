@@ -31,9 +31,9 @@ object AppDependencies {
 
   private def playVersion(playSuffix: String) =
     playSuffix match {
-      case "play-28" => "2.8.20"
-      case "play-29" => "2.9.0"
-      case "play-30" => "3.0.0"
+      case "play-28" => "2.8.21"
+      case "play-29" => "2.9.3"
+      case "play-30" => "3.0.3"
     }
 
   private def playOrg(playSuffix: String): String =
@@ -46,8 +46,8 @@ object AppDependencies {
   private def scalaTestPlusPlayVersion(playSuffix: String): String =
     playSuffix match {
       case "play-28" => "5.1.0"
-      case "play-29" => "6.0.0"
-      case "play-30" => "7.0.0"
+      case "play-29" => "6.0.1"
+      case "play-30" => "7.0.1"
     }
 
   private def flexmarkAllVersion(playSuffix: String): String =

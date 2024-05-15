@@ -1,8 +1,8 @@
 import sbt.Keys._
 import scala.collection.JavaConverters._
 
-val scala2_12 = "2.12.18"
 val scala2_13 = "2.13.12"
+val scala3    = "3.3.3"
 
 ThisBuild / majorVersion := 7
 ThisBuild / isPublicArtefact := true
@@ -25,7 +25,6 @@ lazy val library = (project in file("."))
 
 // empty artefact, exists to ensure eviction of previous play-language jar which has now moved into play-language-play-28
 lazy val playLanguage = Project("play-language", file("play-language"))
-  .settings(crossScalaVersions := Seq(scala2_12, scala2_13))
 
 def copySources(module: Project) = Seq(
   Compile / scalaSource := (module / Compile / scalaSource).value,
@@ -41,7 +40,6 @@ lazy val playLanguagePlay28 = Project("play-language-play-28", file("play-langua
   .disablePlugins(JUnitXmlReportPlugin) //Required to prevent https://github.com/scalatest/scalatest/issues/1427
   .settings(copySources(playLanguagePlay30))
   .settings(
-    crossScalaVersions := Seq(scala2_12, scala2_13),
     libraryDependencies ++= AppDependencies.play28
   )
   .settings(
@@ -60,7 +58,6 @@ lazy val playLanguagePlay29 = Project("play-language-play-29", file("play-langua
   .disablePlugins(JUnitXmlReportPlugin) //Required to prevent https://github.com/scalatest/scalatest/issues/1427
   .settings(copySources(playLanguagePlay30))
   .settings(
-    crossScalaVersions := Seq(scala2_13),
     libraryDependencies ++= AppDependencies.play29
   )
   .settings(
@@ -77,7 +74,7 @@ lazy val playLanguagePlay30 = Project("play-language-play-30", file("play-langua
   .enablePlugins(SbtTwirl)
   .disablePlugins(JUnitXmlReportPlugin) //Required to prevent https://github.com/scalatest/scalatest/issues/1427
   .settings(
-    crossScalaVersions := Seq(scala2_13),
+    crossScalaVersions := Seq(scala2_13, scala3),
     libraryDependencies ++= AppDependencies.play30
   )
   .settings(
