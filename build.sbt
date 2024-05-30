@@ -1,5 +1,4 @@
 import sbt.Keys._
-import scala.collection.JavaConverters._
 
 val scala2_13 = "2.13.12"
 val scala3    = "3.3.3"
