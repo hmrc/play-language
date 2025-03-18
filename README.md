@@ -24,7 +24,7 @@ Add the library to the project dependencies:
 libraryDependencies += "uk.gov.hmrc" %% "play-language-play-xx" % "[INSERT VERSION]"
 ```
 
-Where play-xx is your version of Play (e.g. play-29).
+Where play-xx is your version of Play (e.g. play-30).
 
 Ensure to add the resolvers to your `plugins.sbt`:
 
