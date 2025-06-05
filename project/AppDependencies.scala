@@ -30,8 +30,8 @@ object AppDependencies {
 
   private def playVersion(playSuffix: String) =
     playSuffix match {
-      case "play-29" => "2.9.4"
-      case "play-30" => "3.0.5"
+      case "play-29" => "2.9.7"
+      case "play-30" => "3.0.7"
     }
 
   private def playOrg(playSuffix: String): String =
