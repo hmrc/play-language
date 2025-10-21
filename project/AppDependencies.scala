@@ -31,7 +31,7 @@ object AppDependencies {
   private def playVersion(playSuffix: String) =
     playSuffix match {
       case "play-29" => "2.9.7"
-      case "play-30" => "3.0.8"
+      case "play-30" => "3.0.9"
     }
 
   private def playOrg(playSuffix: String): String =
@@ -42,7 +42,7 @@ object AppDependencies {
 
   private def scalaTestPlusPlayVersion(playSuffix: String): String =
     playSuffix match {
-      case "play-29" => "6.0.1"
-      case "play-30" => "7.0.1"
+      case "play-29" => "6.0.2"
+      case "play-30" => "7.0.2"
     }
 }
