@@ -18,31 +18,10 @@ import sbt._
 
 object AppDependencies {
 
-  val play29 = play("play-29")
-  val play30 = play("play-30")
-
-  private def play(playSuffix: String) = Seq(
+  val play30 = Seq(
     "com.ibm.icu"            %  "icu4j"              % "69.1",
-    playOrg(playSuffix)      %% "play"               % playVersion(playSuffix),
-    "org.scalatestplus.play" %% "scalatestplus-play" % scalaTestPlusPlayVersion(playSuffix) % Test,
-    "com.vladsch.flexmark"   %  "flexmark-all"       % "0.64.8"                             % Test
+    "org.playframework"      %% "play"               % "3.0.9",
+    "org.scalatestplus.play" %% "scalatestplus-play" % "7.0.2"  % Test,
+    "com.vladsch.flexmark"   %  "flexmark-all"       % "0.64.8" % Test
   )
-
-  private def playVersion(playSuffix: String) =
-    playSuffix match {
-      case "play-29" => "2.9.7"
-      case "play-30" => "3.0.9"
-    }
-
-  private def playOrg(playSuffix: String): String =
-    playSuffix match {
-      case "play-29" => "com.typesafe.play"
-      case "play-30" => "org.playframework"
-    }
-
-  private def scalaTestPlusPlayVersion(playSuffix: String): String =
-    playSuffix match {
-      case "play-29" => "6.0.2"
-      case "play-30" => "7.0.2"
-    }
 }
