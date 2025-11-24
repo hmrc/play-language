@@ -11,7 +11,6 @@ ThisBuild / scalacOptions += "-Wconf:src=views/.*:s"
 lazy val library = Project("play-language-play-30", file("play-language-play-30"))
   .enablePlugins(SbtTwirl)
   .disablePlugins(JUnitXmlReportPlugin) //Required to prevent https://github.com/scalatest/scalatest/issues/1427
-  .settings(publish / skip := true)
   .settings(
     crossScalaVersions := Seq(scala2_13, scala3),
     libraryDependencies ++= AppDependencies.play30
