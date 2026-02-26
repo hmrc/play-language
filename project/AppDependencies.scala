@@ -20,7 +20,7 @@ object AppDependencies {
 
   val play30 = Seq(
     "com.ibm.icu"            %  "icu4j"              % "69.1",
-    "org.playframework"      %% "play"               % "3.0.9",
+    "org.playframework"      %% "play"               % "3.0.10",
     "org.scalatestplus.play" %% "scalatestplus-play" % "7.0.2"  % Test,
     "com.vladsch.flexmark"   %  "flexmark-all"       % "0.64.8" % Test
   )
